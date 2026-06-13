@@ -104,6 +104,27 @@
     font-weight:bold;
     cursor:pointer;
 }
+#listaResenas{
+    margin-top:20px;
+}
+
+.resena{
+    background:#fff;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:15px;
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+.resena h4{
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.estrellas{
+    color:gold;
+    margin-bottom:8px;
+}
         }
     </style>
 </head>
@@ -747,6 +768,7 @@
   </button>
 
   <p id="mensaje"></p>
+  <div id="listaResenas"></div>
 </section>
 
     <!-- Footer -->
@@ -909,12 +931,53 @@ async function enviarResena() {
 
         document.getElementById("nombre").value = "";
         document.getElementById("comentario").value = "";
+        cargarResenas();
 
     } catch(error) {
         document.getElementById("mensaje").innerHTML =
         "❌ Error al enviar";
     }
 }
+async function cargarResenas() {
+
+    try {
+
+        const respuesta =
+            await fetch(URL_SCRIPT);
+
+        const datos =
+            await respuesta.json();
+
+        let html = "";
+
+        datos.reverse().forEach(item => {
+
+            html += `
+            <div class="resena">
+
+                <h4>${item.nombre}</h4>
+
+                <div class="estrellas">
+                    ${"⭐".repeat(item.estrellas)}
+                </div>
+
+                <p>${item.comentario}</p>
+
+            </div>
+            `;
+        });
+
+        document.getElementById(
+            "listaResenas"
+        ).innerHTML = html;
+
+    } catch(error) {
+
+        console.error(error);
+
+    }
+}
+cargarResenas();
 </script>
     
 
