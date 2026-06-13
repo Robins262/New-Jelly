@@ -120,6 +120,21 @@
     font-weight:bold;
     margin-bottom:5px;
 }
+.resena.oculta{
+    display:none;
+}
+
+#btnMasResenas{
+    display:block;
+    margin:20px auto;
+    padding:12px 25px;
+    background:#FFC2E2;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    font-weight:bold;
+    color:#7B4173;
+}
 
 .estrellas{
     color:gold;
@@ -768,7 +783,11 @@
   </button>
 
   <p id="mensaje"></p>
-  <div id="listaResenas"></div>
+ <div id="listaResenas"></div>
+
+<button id="btnMasResenas" onclick="toggleResenas()">
+    Ver más opiniones ▼
+</button>
 </section>
 
     <!-- Footer -->
@@ -942,18 +961,18 @@ async function cargarResenas() {
 
     try {
 
-        const respuesta =
-            await fetch(URL_SCRIPT);
+        const respuesta = await fetch(URL_SCRIPT);
+        const datos = await respuesta.json();
 
-        const datos =
-            await respuesta.json();
+        totalResenas = datos.length;
 
         let html = "";
 
-        datos.reverse().forEach(item => {
+        datos.reverse().forEach((item,index) => {
 
             html += `
-            <div class="resena">
+            <div class="resena"
+                 style="${index >= 3 ? 'display:none' : ''}">
 
                 <h4>${item.nombre}</h4>
 
@@ -967,16 +986,46 @@ async function cargarResenas() {
             `;
         });
 
-        document.getElementById(
-            "listaResenas"
-        ).innerHTML = html;
+        document.getElementById("listaResenas").innerHTML = html;
+
+        if(totalResenas <= 3){
+            document.getElementById("btnMasResenas").style.display = "none";
+        }
 
     } catch(error) {
-
         console.error(error);
-
     }
 }
+function toggleResenas(){
+
+    const resenas = document.querySelectorAll(".resena");
+    const btn = document.getElementById("btnMasResenas");
+
+    if(!mostrandoTodas){
+
+        resenas.forEach((r,index)=>{
+            if(index >= 3){
+                r.style.display = "block";
+            }
+        });
+
+        btn.innerHTML = "Ver menos ▲";
+        mostrandoTodas = true;
+
+    }else{
+
+        resenas.forEach((r,index)=>{
+            if(index >= 3){
+                r.style.display = "none";
+            }
+        });
+
+        btn.innerHTML = "Ver más opiniones ▼";
+        mostrandoTodas = false;
+    }
+}
+let mostrandoTodas = false;
+let totalResenas = 0;
 cargarResenas();
 </script>
     
