@@ -65,6 +65,45 @@
                 background-position: 0 0, 15px 15px;
                 background-opacity: 0.1;
             }
+            .reviews{
+    max-width:700px;
+    margin:40px auto;
+    padding:25px;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.1);
+}
+
+.reviews h2{
+    text-align:center;
+    margin-bottom:15px;
+    font-family: inherit;
+}
+
+.reviews input,
+.reviews select,
+.reviews textarea{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+}
+
+.reviews textarea{
+    min-height:100px;
+}
+
+.reviews button{
+    width:100%;
+    padding:12px;
+    background:#FFC2E2;
+    border:none;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+}
         }
     </style>
 </head>
@@ -711,6 +750,8 @@
 </section>
 
     <!-- Footer -->
+   
+</section>
     <footer class="bg-gradient-to-r from-rosaKawaii/30 to-lilaKawaii/30 py-8 px-4 mt-16">
         <div class="container mx-auto text-center">
             <h3 class="font-kawaii text-2xl text-textoKawaii mb-3">Magic Jelly Cake</h3>
@@ -841,6 +882,40 @@ function enviarWhatsApp() {
             actualizarCarrito();
         }
     </script>
+    <script>
+const URL_SCRIPT = "https://script.google.com/macros/s/TU_URL/exec";
+
+async function enviarResena() {
+
+    const datos = {
+        nombre: document.getElementById("nombre").value,
+        estrellas: document.getElementById("estrellas").value,
+        comentario: document.getElementById("comentario").value
+    };
+
+    if(!datos.nombre || !datos.comentario){
+        document.getElementById("mensaje").innerHTML = "❌ Completa los campos";
+        return;
+    }
+
+    try {
+        await fetch(URL_SCRIPT, {
+            method: "POST",
+            body: JSON.stringify(datos)
+        });
+
+        document.getElementById("mensaje").innerHTML =
+        "✅ Opinión enviada correctamente";
+
+        document.getElementById("nombre").value = "";
+        document.getElementById("comentario").value = "";
+
+    } catch(error) {
+        document.getElementById("mensaje").innerHTML =
+        "❌ Error al enviar";
+    }
+}
+</script>
     
 
 </body>
