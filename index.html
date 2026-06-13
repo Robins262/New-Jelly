@@ -681,6 +681,34 @@
             </div>
         </div>
     </div>
+    <section class="reviews">
+  <h2>⭐ Opiniones de Clientes</h2>
+
+  <input
+    type="text"
+    id="nombre"
+    placeholder="Tu nombre"
+  >
+
+  <select id="estrellas">
+    <option value="5">⭐⭐⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="1">⭐</option>
+  </select>
+
+  <textarea
+    id="comentario"
+    placeholder="Escribe tu opinión"
+  ></textarea>
+
+  <button onclick="enviarResena()">
+    Enviar Opinión
+  </button>
+
+  <p id="mensaje"></p>
+</section>
 
     <!-- Footer -->
     <footer class="bg-gradient-to-r from-rosaKawaii/30 to-lilaKawaii/30 py-8 px-4 mt-16">
@@ -813,6 +841,7 @@ function enviarWhatsApp() {
             actualizarCarrito();
         }
     </script>
+    
 
 </body>
 </html>
