@@ -779,7 +779,32 @@
             carrito.splice(indice, 1);
             actualizarCarrito();
         }
+function enviarWhatsApp() {
 
+    if (carrito.length === 0) {
+        alert("Tu carrito está vacío 😔");
+        return;
+    }
+
+    let mensaje = "🍡 *PEDIDO MAGIC JELLY CAKE* 🍡%0A%0A";
+    let total = 0;
+
+    carrito.forEach(item => {
+        let subtotal = item.precio * item.cantidad;
+        total += subtotal;
+
+        mensaje += `✨ ${item.nombre}%0A`;
+        mensaje += `Cantidad: ${item.cantidad}%0A`;
+        mensaje += `Subtotal: S/ ${subtotal.toFixed(2)}%0A%0A`;
+    });
+
+    mensaje += `💰 *TOTAL: S/ ${total.toFixed(2)}*`;
+
+    window.open(
+        `https://wa.me/51934493012?text=${mensaje}`,
+        '_blank'
+    );
+}
         // Vaciar todo el carrito
         function vaciarCarrito() {
             carrito = [];
