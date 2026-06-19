@@ -2886,19 +2886,45 @@
         }
 
         // ==================== MÚSICA DE FONDO ====================
-        function toggleMusica() {
-            const btn = document.getElementById('btnMusica');
-            musicaTocando = !musicaTocando;
-            
-            if (musicaTocando) {
+       // ==================== MÚSICA DE FONDO ====================
+let audioMusica = null;
+
+function toggleMusica() {
+    const btn = document.getElementById('btnMusica');
+    
+    // Crear audio solo una vez
+    if (!audioMusica) {
+        // 🎵 URL de música kawaii (puedes cambiarla)
+        audioMusica = new Audio('https://soundcloud.com/mallgrab/the-way-you-are-edit?si=92bb3b66d6be4d4698dfe877a29ffb76&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing');
+        audioMusica.loop = true;      // Repetir infinito
+        audioMusica.volume = 0.2;     // Volumen 20% (suave)
+    }
+    
+    if (musicaTocando) {
+        // Pausar
+        audioMusica.pause();
+        btn.classList.remove('tocando');
+        mostrarToast('🔇 Música pausada', 'info');
+    } else {
+        // Reproducir
+        const promesa = audioMusica.play();
+        
+        if (promesa !== undefined) {
+            promesa.then(() => {
                 btn.classList.add('tocando');
-                mostrarToast('🎵 Música kawaii activada', 'info');
-                // Aquí podrías agregar audio real con new Audio('url')
-            } else {
-                btn.classList.remove('tocando');
-                mostrarToast('🔇 Música pausada', 'info');
-            }
+                mostrarToast('🎵 ¡Música kawaii activada! ✨', 'success');
+            }).catch(error => {
+                // El navegador bloqueó el autoplay
+                console.log('Autoplay bloqueado:', error);
+                mostrarToast('🔇 Toca la pantalla primero, luego presiona 🎵', 'error');
+                musicaTocando = false; // Revertir estado
+                return;
+            });
         }
+    }
+    
+    musicaTocando = !musicaTocando;
+}
 
         // ==================== CHATBOT LUMI ====================
         const chatbotConocimiento = {
