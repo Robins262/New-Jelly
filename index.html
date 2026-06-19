@@ -7,15 +7,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <a href="https://wa.me/+51934493012/" 
-   target="_blank" 
-   style="position: fixed; bottom: 20px; right: 20px; background-color: #ffc2e2; color: white; padding: 12px 24px; text-decoration: none; border-radius: 50px; font-weight: bold; font-family: Arial, sans-serif; box-shadow: 2px 2px 10px rgba(0,0,0,0.3); z-index: 9999; display: flex; align-items: center; gap: 12px;">
     
-    <!-- Imagen de tu propio logo -->
-    <img src="https://i.pinimg.com/736x/87/fc/24/87fc24f32bf3aae5e3c0b6db792b5db5.jpg" alt="Logo" style="width: 40px; height: 40px; object-fit: contain;">
-    
-    Contáctanos
-</a>
     <script>
         tailwind.config = {
             theme: {
@@ -37,14 +29,11 @@
             }
         }
     </script>
+    
     <style type="text/tailwindcss">
         @layer utilities {
-            .bordeRedondo {
-                border-radius: 30px;
-            }
-            .bordeSuperRedondo {
-                border-radius: 50px;
-            }
+            .bordeRedondo { border-radius: 30px; }
+            .bordeSuperRedondo { border-radius: 50px; }
             .sombraKawaii {
                 box-shadow: 0 8px 0 rgba(123, 65, 115, 0.2);
             }
@@ -63,112 +52,454 @@
                                   radial-gradient(#E4C1F9 10%, transparent 11%);
                 background-size: 30px 30px;
                 background-position: 0 0, 15px 15px;
-                background-opacity: 0.1;
             }
-            .reviews{
-    max-width:700px;
-    margin:40px auto;
-    padding:25px;
-    background:white;
-    border-radius:20px;
-    box-shadow:0 8px 20px rgba(0,0,0,.1);
-}
+        }
+    </style>
+    
+    <style>
+        /* ===== NOTIFICACIONES TOAST ===== */
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            background: white;
+            border-radius: 20px;
+            padding: 15px 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.6s forwards;
+            font-family: 'Comic Sans MS', cursive;
+            border-left: 5px solid #FFC2E2;
+        }
+        .toast.success { border-left-color: #D4F0C6; }
+        .toast.error { border-left-color: #ff6b6b; }
+        .toast.info { border-left-color: #C1EFFF; }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; transform: translateX(100%); }
+        }
 
-.reviews h2{
-    text-align:center;
-    margin-bottom:15px;
-    font-family: inherit;
-}
+        /* ===== MODO OSCURO ===== */
+        body.modo-oscuro {
+            background-color: #2d1f2d !important;
+            color: #f0e0f0 !important;
+        }
+        body.modo-oscuro .bg-white { background-color: #3d2d3d !important; }
+        body.modo-oscuro .bg-white\/50 { background-color: rgba(61,45,61,0.5) !important; }
+        body.modo-oscuro .bg-white\/80 { background-color: rgba(61,45,61,0.8) !important; }
+        body.modo-oscuro .text-textoKawaii { color: #f0e0f0 !important; }
+        body.modo-oscuro .bg-fondoKawaii { background-color: #2d1f2d !important; }
+        body.modo-oscuro .patronFondo {
+            background-image: radial-gradient(#7B4173 10%, transparent 11%),
+                              radial-gradient(#5a3a5a 10%, transparent 11%);
+        }
+        body.modo-oscuro .sombraKawaii {
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3);
+        }
+        body.modo-oscuro #carritoPanel { background-color: #3d2d3d !important; }
 
-.reviews input,
-.reviews select,
-.reviews textarea{
-    width:100%;
-    padding:12px;
-    margin-bottom:10px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    font-size:16px;
-}
+        /* ===== BOTÓN VOLVER ARRIBA ===== */
+        #btnArriba {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #FFC2E2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 9998;
+        }
+        #btnArriba.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        #btnArriba:hover {
+            transform: translateY(-5px);
+            background: #E4C1F9;
+        }
 
-.reviews textarea{
-    min-height:100px;
-}
+        /* ===== FAVORITOS ===== */
+        .btn-favorito {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-favorito:hover { transform: scale(1.2); }
+        .btn-favorito.activo { color: #ff4757; }
+        
+        /* ===== BUSCADOR ===== */
+        #buscador {
+            width: 100%;
+            max-width: 500px;
+            padding: 14px 24px;
+            border: 3px solid #FFC2E2;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Comic Sans MS', cursive;
+        }
+        #buscador:focus {
+            border-color: #E4C1F9;
+            box-shadow: 0 0 15px rgba(228,193,249,0.4);
+        }
 
-.reviews button{
-    width:100%;
-    padding:12px;
-    background:#FFC2E2;
-    border:none;
-    border-radius:10px;
-    font-weight:bold;
-    cursor:pointer;
-}
-#listaResenas{
-    margin-top:20px;
-}
+        /* ===== MENÚ MÓVIL ===== */
+        #menuMovil {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(255,247,252,0.98);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+        #menuMovil a {
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 24px;
+            color: #7B4173;
+            text-decoration: none;
+            padding: 10px 30px;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+        #menuMovil a:hover { background: #FFC2E2; }
 
-.resena{
-    background:#fff;
-    padding:15px;
-    margin-bottom:15px;
-    border-radius:15px;
-    box-shadow:0 3px 10px rgba(0,0,0,.1);
-}
+        /* ===== RESEÑAS ===== */
+        .reviews {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,.1);
+        }
+        .reviews input, .reviews select, .reviews textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 2px solid #FFC2E2;
+            border-radius: 15px;
+            font-size: 16px;
+            outline: none;
+            font-family: 'Quicksand', sans-serif;
+        }
+        .reviews input:focus, .reviews select:focus, .reviews textarea:focus {
+            border-color: #E4C1F9;
+        }
+        .reviews textarea { min-height: 100px; resize: vertical; }
+        .reviews button {
+            width: 100%;
+            padding: 14px;
+            background: #FFC2E2;
+            border: none;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 18px;
+            color: #7B4173;
+            transition: all 0.3s;
+        }
+        .reviews button:hover {
+            background: #E4C1F9;
+            transform: translateY(-2px);
+        }
+        .resena {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,.08);
+            border-left: 4px solid #FFC2E2;
+        }
+        .resena h4 { font-weight: bold; margin-bottom: 5px; font-family: 'Comic Sans MS', cursive; }
+        .resena.oculta { display: none; }
+        #btnMasResenas {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 30px;
+            background: #FFC2E2;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #7B4173;
+            font-family: 'Comic Sans MS', cursive;
+            transition: all 0.3s;
+        }
+        #btnMasResenas:hover { background: #E4C1F9; }
+        .estrellas { color: gold; margin-bottom: 8px; font-size: 18px; }
 
-.resena h4{
-    font-weight:bold;
-    margin-bottom:5px;
-}
-.resena.oculta{
-    display:none;
-}
+        /* ===== SCROLLBAR KAWAII ===== */
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: #FFF7FC; }
+        ::-webkit-scrollbar-thumb { background: #FFC2E2; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #E4C1F9; }
 
-#btnMasResenas{
-    display:block;
-    margin:20px auto;
-    padding:12px 25px;
-    background:#FFC2E2;
-    border:none;
-    border-radius:15px;
-    cursor:pointer;
-    font-weight:bold;
-    color:#7B4173;
-}
+        /* ===== ANIMACIONES ===== */
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animar-entrada { animation: bounceIn 0.6s ease; }
 
-.estrellas{
-    color:gold;
-    margin-bottom:8px;
-}
+        /* ===== GALERÍA LIGHTBOX ===== */
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #lightbox.activo { display: flex; }
+        #lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255,194,226,0.3);
+        }
+        #lightbox .cerrar-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 50px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        #lightbox .nav-lightbox {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        #lightbox .nav-lightbox:hover { background: rgba(255,194,226,0.3); }
+        #lightbox .prev { left: 20px; }
+        #lightbox .next { right: 20px; }
+        #lightbox .contador-lightbox {
+            color: white;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 18px;
+            margin-top: 15px;
+        }
+
+        /* ===== CONFETI ===== */
+        #confeti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99998;
+            overflow: hidden;
+        }
+        .confeti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: caerConfeti 3s ease-out forwards;
+        }
+        @keyframes caerConfeti {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* ===== CALCULADORA DE PRESUPUESTO ===== */
+        .calculadora-box {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 8px 0 rgba(123, 65, 115, 0.2);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .calculadora-box input {
+            width: 100%;
+            padding: 15px;
+            border: 3px solid #FFC2E2;
+            border-radius: 20px;
+            font-size: 18px;
+            text-align: center;
+            font-family: 'Comic Sans MS', cursive;
+            outline: none;
+        }
+        .calculadora-box input:focus { border-color: #E4C1F9; }
+        .resultado-calculadora {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 20px;
+            background: #FFF7FC;
+            min-height: 100px;
+        }
+
+        /* ===== CUPONES ===== */
+        .cupon-input {
+            padding: 12px 20px;
+            border: 3px dashed #FFC2E2;
+            border-radius: 20px;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .cupon-input:focus { border-color: #E4C1F9; }
+        .cupon-aplicado {
+            background: #D4F0C6 !important;
+            border-color: #7B4173 !important;
+        }
+
+        /* ===== FORMULARIO PERSONALIZADO ===== */
+        .form-personalizado input, .form-personalizado select, .form-personalizado textarea {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 2px solid #FFC2E2;
+            border-radius: 15px;
+            font-size: 16px;
+            outline: none;
+            font-family: 'Quicksand', sans-serif;
+        }
+        .form-personalizado input:focus, .form-personalizado select:focus, .form-personalizado textarea:focus {
+            border-color: #E4C1F9;
+            box-shadow: 0 0 10px rgba(228,193,249,0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .reviews { margin: 20px 10px; padding: 15px; }
+            #lightbox .nav-lightbox { font-size: 24px; padding: 10px; }
         }
     </style>
 </head>
 <body class="bg-fondoKawaii patronFondo text-textoKawaii font-cuerpo">
 
-    <!-- Barra de Navegación -->
+    <!-- ===== CONFETI CONTAINER ===== -->
+    <div id="confeti-container"></div>
+
+    <!-- ===== LIGHTBOX ===== -->
+    <div id="lightbox" onclick="cerrarLightbox(event)">
+        <span class="cerrar-lightbox" onclick="cerrarLightboxDirecto()">&times;</span>
+        <span class="nav-lightbox prev" onclick="navegarLightbox(-1)">❮</span>
+        <span class="nav-lightbox next" onclick="navegarLightbox(1)">❯</span>
+        <img id="lightbox-img" src="" alt="">
+        <div class="contador-lightbox" id="lightbox-contador"></div>
+    </div>
+
+    <!-- ===== CONTENEDOR DE TOASTS ===== -->
+    <div id="toastContainer"></div>
+
+    <!-- ===== BOTÓN WHATSAPP ===== -->
+    <a href="https://wa.me/+51934493012/" 
+       target="_blank" 
+       style="position: fixed; bottom: 20px; right: 20px; background-color: #ffc2e2; color: white; padding: 12px 24px; text-decoration: none; border-radius: 50px; font-weight: bold; font-family: Arial, sans-serif; box-shadow: 2px 2px 10px rgba(0,0,0,0.3); z-index: 9999; display: flex; align-items: center; gap: 12px;">
+        <img src="https://i.pinimg.com/736x/87/fc/24/87fc24f32bf3aae5e3c0b6db792b5db5.jpg" alt="Logo" style="width: 40px; height: 40px; object-fit: contain; border-radius: 50%;">
+        Contáctanos
+    </a>
+
+    <!-- ===== BOTÓN VOLVER ARRIBA ===== -->
+    <div id="btnArriba" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fa fa-arrow-up text-white text-xl"></i>
+    </div>
+
+    <!-- ===== MENÚ MÓVIL ===== -->
+    <div id="menuMovil">
+        <button onclick="cerrarMenuMovil()" style="position:absolute; top:20px; right:20px; font-size:40px; background:none; border:none; cursor:pointer;">&times;</button>
+        <a href="#inicio" onclick="cerrarMenuMovil()">Inicio</a>
+        <a href="#nosotros" onclick="cerrarMenuMovil()">Nosotros</a>
+        <a href="#productos" onclick="cerrarMenuMovil()">Productos</a>
+        <a href="#personalizado" onclick="cerrarMenuMovil()">Personalizado</a>
+        <a href="#calculadora" onclick="cerrarMenuMovil()">Calculadora</a>
+        <a href="#servicios" onclick="cerrarMenuMovil()">Servicios</a>
+        <a href="#contacto" onclick="cerrarMenuMovil()">Contacto</a>
+    </div>
+
+    <!-- ===== BARRA DE NAVEGACIÓN ===== -->
     <nav class="bg-white/80 backdrop-blur-md bordeSuperRedondo mx-4 mt-4 sombraKawaii sticky top-4 z-50">
         <div class="container mx-auto px-6 py-4 flex flex-wrap justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="https://i.pinimg.com/736x/87/fc/24/87fc24f32bf3aae5e3c0b6db792b5db5.jpg" alt="Descripción de la imagen" width="80" height="80">
+                <img src="https://i.pinimg.com/736x/87/fc/24/87fc24f32bf3aae5e3c0b6db792b5db5.jpg" alt="Logo" width="50" height="50" class="rounded-full">
                 <span class="font-kawaii text-2xl text-textoKawaii">Magic Jelly Cake</span>
             </div>
 
-            <div class="hidden md:flex gap-6 font-kawaii text-lg">
+            <div class="hidden md:flex gap-6 font-kawaii text-lg items-center">
                 <a href="#inicio" class="px-3 py-2 rounded-full hover:bg-rosaKawaii/30 transition-colors">Inicio</a>
                 <a href="#nosotros" class="px-3 py-2 rounded-full hover:bg-lilaKawaii/30 transition-colors">Nosotros</a>
                 <a href="#productos" class="px-3 py-2 rounded-full hover:bg-celesteKawaii/30 transition-colors">Productos</a>
-                <a href="#servicios" class="px-3 py-2 rounded-full hover:bg-amarilloKawaii/30 transition-colors">Servicios</a>
-                <a href="#contacto" class="px-3 py-2 rounded-full hover:bg-verdeKawaii/30 transition-colors">Contacto</a>
+                <a href="#personalizado" class="px-3 py-2 rounded-full hover:bg-amarilloKawaii/30 transition-colors">Personalizado</a>
+                <a href="#calculadora" class="px-3 py-2 rounded-full hover:bg-verdeKawaii/30 transition-colors">Calculadora</a>
+                <a href="#servicios" class="px-3 py-2 rounded-full hover:bg-rosaKawaii/30 transition-colors">Servicios</a>
+                <a href="#contacto" class="px-3 py-2 rounded-full hover:bg-lilaKawaii/30 transition-colors">Contacto</a>
+                <button onclick="toggleModoOscuro()" id="btnModo" class="px-3 py-2 rounded-full hover:bg-lilaKawaii/30 transition-colors" title="Cambiar tema">
+                    <i class="fa fa-moon-o text-xl"></i>
+                </button>
             </div>
 
-            <button id="btnCarrito" class="relative bg-rosaKawaii bordeSuperRedondo px-5 py-2 sombraKawaii efectoFlotar">
-                <i class="fa fa-shopping-bag text-white text-xl"></i>
-                <span id="contador" class="absolute -top-2 -right-2 bg-amarilloKawaii text-textoKawaii font-bold w-7 h-7 bordeSuperRedondo flex items-center justify-center">0</span>
-            </button>
+            <div class="flex items-center gap-3">
+                <button class="md:hidden text-2xl" onclick="abrirMenuMovil()">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <button id="btnCarrito" class="relative bg-rosaKawaii bordeSuperRedondo px-5 py-2 sombraKawaii efectoFlotar">
+                    <i class="fa fa-shopping-bag text-white text-xl"></i>
+                    <span id="contador" class="absolute -top-2 -right-2 bg-amarilloKawaii text-textoKawaii font-bold w-7 h-7 bordeSuperRedondo flex items-center justify-center text-sm">0</span>
+                </button>
+            </div>
         </div>
     </nav>
 
-    <!-- Sección Principal -->
+    <!-- ===== SECCIÓN PRINCIPAL ===== -->
     <section id="inicio" class="py-16 px-4">
         <div class="container mx-auto max-w-6xl">
             <div class="text-center mb-12">
@@ -180,88 +511,62 @@
                 </p>
             </div>
 
-            <!-- Caja Principal Estilo Kawaii -->
             <div class="bg-white bordeRedondo p-8 sombraKawaii max-w-5xl mx-auto efectoFlotar">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-                    <!-- Parte de la Tienda Moto -->
                     <div class="flex justify-center">
                         <div class="bg-gradient-to-br from-rosaKawaii to-lilaKawaii bordeRedondo p-6 sombraKawaii w-full max-w-sm">
                             <div class="text-center mb-6">
                                 <h2 class="font-kawaii text-3xl text-white mb-2">Magic Jelly Cake</h2>
                                 <p class="text-white/90 font-kawaii text-lg">🍬 Tienda Mágica 🍬</p>
                             </div>
-
-                            <!-- Diseño de la moto-tienda -->
                             <div class="bg-white/80 bordeRedondo p-5 mb-6">
                                 <p class="text-center font-kawaii text-xl text-textoKawaii mb-4">Vitrina de Dulces 🍡</p>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div class="bg-rosaKawaii/30 bordeRedondo p-4 text-center efectoFlotar">
-                                        <img 
-                                         src="https://i.pinimg.com/736x/a7/d4/87/a7d48739b9da50641199c0e6478cfeaf.jpg" 
-                                         alt="Gatito mágico de color morado con una varita de estrella" 
-                                         width="80" class="mx-auto" />
-                                        <p class="font-kawaii mt-2 text-textoKawaii">Gelatina 3D de flores</p>
+                                    <div class="bg-rosaKawaii/30 bordeRedondo p-4 text-center efectoFlotar cursor-pointer" onclick="abrirLightbox(0)">
+                                        <img src="https://i.pinimg.com/736x/a7/d4/87/a7d48739b9da50641199c0e6478cfeaf.jpg" alt="Gelatina 3D" width="80" class="mx-auto rounded-xl hover:scale-110 transition">
+                                        <p class="font-kawaii mt-2 text-textoKawaii text-sm">Gelatina 3D de flores</p>
                                     </div>
-                                    <div class="bg-celesteKawaii/30 bordeRedondo p-4 text-center efectoFlotar">
-                                        <img src="https://i.pinimg.com/736x/70/ca/a8/70caa80925efed27822f44497571fe58.jpg" alt="Gatito mágico de color morado con una varita de estrella" width="120" class="mx-auto" />
-                                        <p class="font-kawaii mt-2 text-textoKawaii">Imagenes encapsuladas</p>
+                                    <div class="bg-celesteKawaii/30 bordeRedondo p-4 text-center efectoFlotar cursor-pointer" onclick="abrirLightbox(1)">
+                                        <img src="https://i.pinimg.com/736x/70/ca/a8/70caa80925efed27822f44497571fe58.jpg" alt="Encapsuladas" width="120" class="mx-auto rounded-xl hover:scale-110 transition">
+                                        <p class="font-kawaii mt-2 text-textoKawaii text-sm">Imágenes encapsuladas</p>
                                     </div>
-                                    <div class="bg-amarilloKawaii/30 bordeRedondo p-4 text-center efectoFlotar">
-                                        <img src="https://i.pinimg.com/736x/6b/76/c8/6b76c8827eb74509106212bc5527de24.jpg" alt="Gatito mágico de color morado con una varita de estrella" width="150" class="mx-auto" />
-                                        <p class="font-kawaii mt-2 text-textoKawaii">Empaque Premiun</p>
+                                    <div class="bg-amarilloKawaii/30 bordeRedondo p-4 text-center efectoFlotar cursor-pointer" onclick="abrirLightbox(2)">
+                                        <img src="https://i.pinimg.com/736x/6b/76/c8/6b76c8827eb74509106212bc5527de24.jpg" alt="Empaque" width="150" class="mx-auto rounded-xl hover:scale-110 transition">
+                                        <p class="font-kawaii mt-2 text-textoKawaii text-sm">Empaque Premium</p>
                                     </div>
-                                    <div class="bg-verdeKawaii/30 bordeRedondo p-4 text-center efectoFlotar">
-                                        <img src="https://i.pinimg.com/736x/64/c1/12/64c11201c408e248c847a99e4852d43b.jpg" alt="Gatito mágico de color morado con una varita de estrella" width="200" class="mx-auto" />
-                                        <p class="font-kawaii mt-2 text-textoKawaii">Tarjeta de fidelidad</p>
+                                    <div class="bg-verdeKawaii/30 bordeRedondo p-4 text-center efectoFlotar cursor-pointer" onclick="abrirLightbox(3)">
+                                        <img src="https://i.pinimg.com/736x/64/c1/12/64c11201c408e248c847a99e4852d43b.jpg" alt="Fidelidad" width="200" class="mx-auto rounded-xl hover:scale-110 transition">
+                                        <p class="font-kawaii mt-2 text-textoKawaii text-sm">Tarjeta de fidelidad</p>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="text-center">
                                 <span class="font-kawaii text-white text-lg">✧ 100% Artesanal ✧</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Información Kawaii -->
                     <div class="space-y-5">
                         <div class="bg-rosaKawaii/20 bordeRedondo p-6 sombraSuave efectoFlotar">
                             <h3 class="font-kawaii text-2xl text-textoKawaii mb-3 flex items-center gap-2">
                                 <span>🎨</span> Nuestra Esencia
                             </h3>
                             <ul class="space-y-2 font-cuerpo text-lg">
-                                <li class="flex items-center gap-2">
-                                    <span class="text-rosaKawaii text-2xl">✿</span> Arte comestible muy bonito
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-rosaKawaii text-2xl">✿</span> Hecho con muchísimo amor
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-rosaKawaii text-2xl">✿</span> Diseños únicos y tiernos
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-rosaKawaii text-2xl">✿</span> Momentos llenos de alegría
-                                </li>
+                                <li class="flex items-center gap-2"><span class="text-rosaKawaii text-2xl">✿</span> Arte comestible muy bonito</li>
+                                <li class="flex items-center gap-2"><span class="text-rosaKawaii text-2xl">✿</span> Hecho con muchísimo amor</li>
+                                <li class="flex items-center gap-2"><span class="text-rosaKawaii text-2xl">✿</span> Diseños únicos y tiernos</li>
+                                <li class="flex items-center gap-2"><span class="text-rosaKawaii text-2xl">✿</span> Momentos llenos de alegría</li>
                             </ul>
                         </div>
-
                         <div class="bg-lilaKawaii/20 bordeRedondo p-6 sombraSuave efectoFlotar">
                             <h3 class="font-kawaii text-2xl text-textoKawaii mb-3 flex items-center gap-2">
                                 <span>🍭</span> Lo que ofrecemos
                             </h3>
                             <ul class="space-y-2 font-cuerpo text-lg">
-                                <li class="flex items-center gap-2">
-                                    <span class="text-lilaKawaii text-2xl">✦</span> Ideal para fiestas y eventos
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-lilaKawaii text-2xl">✦</span> Regalos especiales para tus seres queridos
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-lilaKawaii text-2xl">✦</span> Diseños personalizados como tú quieras
-                                </li>
-                                <li class="flex items-center gap-2">
-                                    <span class="text-lilaKawaii text-2xl">✦</span> Sabor delicioso y colores hermosos
-                                </li>
+                                <li class="flex items-center gap-2"><span class="text-lilaKawaii text-2xl">✦</span> Ideal para fiestas y eventos</li>
+                                <li class="flex items-center gap-2"><span class="text-lilaKawaii text-2xl">✦</span> Regalos especiales</li>
+                                <li class="flex items-center gap-2"><span class="text-lilaKawaii text-2xl">✦</span> Diseños personalizados</li>
+                                <li class="flex items-center gap-2"><span class="text-lilaKawaii text-2xl">✦</span> Sabor delicioso y colores hermosos</li>
                             </ul>
                         </div>
                     </div>
@@ -270,37 +575,30 @@
         </div>
     </section>
 
-    <!-- Sección Nosotros -->
+    <!-- ===== SECCIÓN NOSOTROS ===== -->
     <section id="nosotros" class="py-16 px-4 bg-white/50">
         <div class="container mx-auto max-w-6xl">
             <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
                 Sobre Nosotros 🐱
             </h2>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                 <div class="flex justify-center">
-                    <div class="w-72 h-72 bg-gradient-to-br from-rosaKawaii to-lilaKawaii bordeRedondo sombraKawaii flex items-center justify-center efectoFlotar">
-                        <img 
-                         src="https://i.pinimg.com/736x/e3/4e/c9/e34ec92a6fa231a0db925f888c356f0a.jpg" 
-                         alt="Gatito mágico de color morado con una varita de estrella" 
-                         width="300" />
+                    <div class="w-72 h-72 bg-gradient-to-br from-rosaKawaii to-lilaKawaii bordeRedondo sombraKawaii flex items-center justify-center efectoFlotar cursor-pointer" onclick="abrirLightbox(4)">
+                        <img src="https://i.pinimg.com/736x/e3/4e/c9/e34ec92a6fa231a0db925f888c356f0a.jpg" alt="Lumi" width="250" class="rounded-2xl">
                     </div>
                 </div>
-
                 <div class="space-y-6">
                     <div class="bg-celesteKawaii/20 bordeRedondo p-6 sombraSuave">
                         <h3 class="font-kawaii text-2xl text-textoKawaii mb-3">Nuestra Mascota Lumi ✨</h3>
                         <p class="font-cuerpo text-lg leading-relaxed">
                             Es nuestra pequeña guía mágica, le encantan los colores, las flores y hacer que cada día sea más bonito.
-                            Cuida que cada gelatinas quede perfecta y llena de alegría para ti 🥰
+                            Cuida que cada gelatina quede perfecta y llena de alegría para ti 🥰
                         </p>
                     </div>
-
                     <div class="bg-amarilloKawaii/20 bordeRedondo p-6 sombraSuave">
                         <h3 class="font-kawaii text-2xl text-textoKawaii mb-3">Materiales Especiales 🧸</h3>
                         <p class="font-cuerpo text-lg leading-relaxed">
-                            Usamos materiales de muy buena calidad, con acabados suaves, iluminación tierna y vitrinas especiales
-                            para que tus gelatinas se vean siempre muy bonitas y frescas.
+                            Usamos materiales de muy buena calidad, con acabados suaves e iluminación tierna para que tus gelatinas se vean siempre muy bonitas y frescas.
                         </p>
                     </div>
                 </div>
@@ -308,155 +606,150 @@
         </div>
     </section>
 
-<!-- Sección Productos -->
+    <!-- ===== BUSCADOR DE PRODUCTOS ===== -->
+    <section class="py-8 px-4">
+        <div class="container mx-auto max-w-6xl text-center">
+            <h3 class="font-kawaii text-2xl mb-4">🔍 Busca tu gelatina favorita</h3>
+            <input type="text" id="buscador" placeholder="Escribe el nombre del producto..." onkeyup="filtrarProductos()">
+            <p id="resultadosBusqueda" class="mt-3 font-kawaii text-lg text-rosaKawaii"></p>
+        </div>
+    </section>
+
+    <!-- ===== SECCIÓN PRODUCTOS ===== -->
     <section id="productos" class="py-16 px-4 patronFondo">
         <div class="container mx-auto max-w-6xl">
-            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
+            
+            <!-- Box Mini -->
+            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12 categoria-titulo" data-cat="boxmini">
                 Box Mini 🍡
             </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Producto 1 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/99/49/e1/9949e14bb30ca447059b099cb5246bf3.jpg" img="" width="200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" id="grid-boxmini">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="box pequeño cumpleañero">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Box Pequeño Cumpleañero')">🤍</button>
+                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(5)">
+                        <img src="https://i.pinimg.com/736x/99/49/e1/9949e14bb30ca447059b099cb5246bf3.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Box Pequeño Cumpleañero</h3>
                     <p class="font-cuerpo text-lg mb-4">1 flor • 100g • Muy tierna</p>
-                    <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ Consultar según diseño y cantidad</p>
-                    <button onclick="agregarAlCarrito('Box Pequeño Cumpleañero', 12)" class="w-full bg-rosaKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-rosaKawaii/90 transition-colors">
+                    <p class="font-kawaii text-2xl text-rosaKawaii mb-4">S/ Consultar</p>
+                    <button onclick="agregarAlCarrito('Box Pequeño Cumpleañero', 0)" class="w-full bg-rosaKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-rosaKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 2 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/86/6b/b3/866bb38a82335bb16220cf093d4d339b.jpg" img="" width="200">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="box pequeño tropical">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Box Pequeño Tropical')">🤍</button>
+                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(6)">
+                        <img src="https://i.pinimg.com/736x/86/6b/b3/866bb38a82335bb16220cf093d4d339b.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Box Pequeño Tropical</h3>
                     <p class="font-cuerpo text-lg mb-4">1 flor • 100g • Muy tierna</p>
-                    <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ Consultar según diseño y cantidad</p>
-                    <button onclick="agregarAlCarrito('Box Pequeño Tropical', 22)" class="w-full bg-celesteKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-celesteKawaii/90 transition-colors">
+                    <p class="font-kawaii text-2xl text-rosaKawaii mb-4">S/ Consultar</p>
+                    <button onclick="agregarAlCarrito('Box Pequeño Tropical', 0)" class="w-full bg-celesteKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-celesteKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 3 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/cd/6a/b6/cd6ab628f197944ae2595fb13bd04af9.jpg" img="" width="180">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="box mini rosas">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Box Mini Rosas')">🤍</button>
+                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(7)">
+                        <img src="https://i.pinimg.com/736x/cd/6a/b6/cd6ab628f197944ae2595fb13bd04af9.jpg" width="180" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Box Mini Rosas</h3>
                     <p class="font-cuerpo text-lg mb-4">1 flor • 100g • Muy tierna</p>
-                    <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ Consultar según diseño y cantidad</p>
-                    <button onclick="agregarAlCarrito('Box Mini Rosas', 35)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
+                    <p class="font-kawaii text-2xl text-rosaKawaii mb-4">S/ Consultar</p>
+                    <button onclick="agregarAlCarrito('Box Mini Rosas', 0)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
             </div>
 
-        </div>
-    
-   
-        </div>
-        <!-- Sección Productos -->
-    <section id="productos" class="py-16 px-4 patronFondo">
-        <div class="container mx-auto max-w-6xl">
-            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
+            <!-- Pequeño -->
+            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12 categoria-titulo" data-cat="pequeno">
                 Pequeño 🍡
             </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Producto 1 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/a8/03/e0/a803e0ba383534d912c9362e817bbc4a.jpg" img="" width="200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" id="grid-pequeno">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina pequeña rosa naranja">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina Pequeña - Rosa Naranja')">🤍</button>
+                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(8)">
+                        <img src="https://i.pinimg.com/736x/a8/03/e0/a803e0ba383534d912c9362e817bbc4a.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Pequeña - Rosa Naranja</h3>
                     <p class="font-cuerpo text-lg mb-4">1 Gelatina • 100g • Muy tierna</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 25.00</p>
-                    <button onclick="agregarAlCarrito('Gelatina Pequeña - Rosa', 12)" class="w-full bg-rosaKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-rosaKawaii/90 transition-colors">
+                    <button onclick="agregarAlCarrito('Gelatina Pequeña - Rosa Naranja', 25)" class="w-full bg-rosaKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-rosaKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 2 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/46/9c/e3/469ce3bfededfecd059863728d66005b.jpg" img="" width="200">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina pequeña rosa rosada">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina pequeña - Rosa rosada')">🤍</button>
+                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(9)">
+                        <img src="https://i.pinimg.com/736x/46/9c/e3/469ce3bfededfecd059863728d66005b.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina pequeña - Rosa rosada</h3>
                     <p class="font-cuerpo text-lg mb-4">1 Gelatina • 100g • Muy bonita</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 30.00</p>
-                    <button onclick="agregarAlCarrito('Gelatina pequeña - Rosa rosada', 22)" class="w-full bg-celesteKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-celesteKawaii/90 transition-colors">
+                    <button onclick="agregarAlCarrito('Gelatina pequeña - Rosa rosada', 30)" class="w-full bg-celesteKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-celesteKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 3 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/d8/46/c6/d846c6521d42ccd854eac9bf6e74af94.jpg" img="" width="200">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina pequeña rosa lila">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina pequeña - Rosa Lila')">🤍</button>
+                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(10)">
+                        <img src="https://i.pinimg.com/736x/d8/46/c6/d846c6521d42ccd854eac9bf6e74af94.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina pequeña - Rosa Lila</h3>
                     <p class="font-cuerpo text-lg mb-4">1 Gelatina • 100g • Ideal para fiestas</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 30.00</p>
-                    <button onclick="agregarAlCarrito('Gelatina pequeña', 22)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
+                    <button onclick="agregarAlCarrito('Gelatina pequeña - Rosa Lila', 30)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-                <!-- Producto 4 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/42/5c/b7/425cb7935d182fef6b3246beaec8da93.jpg" img="" width="200">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina pequeña corazon cereza">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina pequeña - Corazon cereza')">🤍</button>
+                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(11)">
+                        <img src="https://i.pinimg.com/736x/42/5c/b7/425cb7935d182fef6b3246beaec8da93.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
-                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina pequeña - Corazon cereza</h3>
+                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina pequeña - Corazón cereza</h3>
                     <p class="font-cuerpo text-lg mb-4">1 Gelatina • 100g • Ideal para fiestas</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 30.00</p>
-                    <button onclick="agregarAlCarrito('Gelatina pequeña', 22)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
+                    <button onclick="agregarAlCarrito('Gelatina pequeña - Corazon cereza', 30)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-                 <!-- Producto 5 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/a5/99/c9/a599c98aa931ff286cf6cafe4ad4536b.jpg" img="" width="250">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina pequeña margarita">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina pequeña - Margarita')">🤍</button>
+                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(12)">
+                        <img src="https://i.pinimg.com/736x/a5/99/c9/a599c98aa931ff286cf6cafe4ad4536b.jpg" width="250" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina pequeña - Margarita</h3>
                     <p class="font-cuerpo text-lg mb-4">1 Gelatina • 100g • Ideal para fiestas</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 30.00</p>
-                    <button onclick="agregarAlCarrito('Gelatina pequeña', 22)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
+                    <button onclick="agregarAlCarrito('Gelatina pequeña - Margarita', 30)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-                  <!-- Producto 6 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/ef/13/48/ef134875fce70f94355e55a7f19a3a1c.jpg" img="" width="180">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina pequeña petalos">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina pequeña - Petalos')">🤍</button>
+                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(13)">
+                        <img src="https://i.pinimg.com/736x/ef/13/48/ef134875fce70f94355e55a7f19a3a1c.jpg" width="180" class="rounded-xl transition-transform hover:scale-110">
                     </div>
-                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina pequeña - Petalos</h3>
+                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina pequeña - Pétalos</h3>
                     <p class="font-cuerpo text-lg mb-4">1 Gelatina • 100g • Ideal para fiestas</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 30.00</p>
-                    <button onclick="agregarAlCarrito('Gelatina pequeña - Petalos', 22)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
+                    <button onclick="agregarAlCarrito('Gelatina pequeña - Petalos', 30)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-            </div> 
+            </div>
 
-        </div>
-<!-- Sección Productos -->
-    <section id="productos" class="py-16 px-4 patronFondo">
-        <div class="container mx-auto max-w-6xl">
-            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
+            <!-- Mediano -->
+            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12 categoria-titulo" data-cat="mediano">
                 Mediano 🍡
             </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Producto 1 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/ed/ba/e7/edbae74f7d5e27778712c67105866c92.jpg" img="" width="200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" id="grid-mediano">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina mediano flor">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina Mediano - Flor')">🤍</button>
+                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(14)">
+                        <img src="https://i.pinimg.com/736x/ed/ba/e7/edbae74f7d5e27778712c67105866c92.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Mediano - Flor</h3>
                     <p class="font-cuerpo text-lg mb-4">1 flor • 250g • Muy tierna</p>
@@ -465,11 +758,10 @@
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 2 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/8b/89/fe/8b89fe30bfba4c89ecaf9b6c0f86179a.jpg" img="" width="200">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina pasion mediano">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina Pasión Mediano')">🤍</button>
+                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(15)">
+                        <img src="https://i.pinimg.com/736x/8b/89/fe/8b89fe30bfba4c89ecaf9b6c0f86179a.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Pasión Mediano</h3>
                     <p class="font-cuerpo text-lg mb-4">Varias flores • 250g • Muy bonita</p>
@@ -478,13 +770,12 @@
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 3 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/e8/e0/80/e8e080731cec36031e093a236a2684fb.jpg" img="" width="180">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina mediano mix flores">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina Mediano - Mix flores')">🤍</button>
+                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(16)">
+                        <img src="https://i.pinimg.com/736x/e8/e0/80/e8e080731cec36031e093a236a2684fb.jpg" width="180" class="rounded-xl transition-transform hover:scale-110">
                     </div>
-                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina  Mediano - Mix flores</h3>
+                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Mediano - Mix flores</h3>
                     <p class="font-cuerpo text-lg mb-4">Diseño completo • 250g • Ideal para fiestas</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 50.00</p>
                     <button onclick="agregarAlCarrito('Gelatina Mediano - Mix flores', 50)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
@@ -493,57 +784,46 @@
                 </div>
             </div>
 
-        </div>
-<!-- Sección Productos -->
-    <section id="productos" class="py-16 px-4 patronFondo">
-        <div class="container mx-auto max-w-6xl">
-            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
+            <!-- Grande -->
+            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12 categoria-titulo" data-cat="grande">
                 Grande 🍡
             </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Producto 1 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/f7/3a/9d/f73a9d1a011c813b7e42fe5ed4985602.jpg" img="" width="200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" id="grid-grande">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina grande fresas">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina Grande - Fresas')">🤍</button>
+                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(17)">
+                        <img src="https://i.pinimg.com/736x/f7/3a/9d/f73a9d1a011c813b7e42fe5ed4985602.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
-                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Grande</h3>
-                    <p class="font-cuerpo text-lg mb-4">Gelatina grande - 500G - Rodeado de Fresas</p>
+                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Grande - Fresas</h3>
+                    <p class="font-cuerpo text-lg mb-4">Gelatina grande • 500g • Rodeado de Fresas</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 70.00</p>
-                    <button onclick="agregarAlCarrito('Gelatina Grande', 35)" class="w-full bg-rosaKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-rosaKawaii/90 transition-colors">
+                    <button onclick="agregarAlCarrito('Gelatina Grande - Fresas', 70)" class="w-full bg-rosaKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-rosaKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 2 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/8b/8f/0c/8b8f0ca8d19d703c9f86619b15d3addc.jpg" img="" width="200">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina grande margarita">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina Grande - Margarita')">🤍</button>
+                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(18)">
+                        <img src="https://i.pinimg.com/736x/8b/8f/0c/8b8f0ca8d19d703c9f86619b15d3addc.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
-                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Grande</h3>
-                    <p class="font-cuerpo text-lg mb-4">Gelatina Grande - 500g - Con margarita</p>
+                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Grande - Margarita</h3>
+                    <p class="font-cuerpo text-lg mb-4">Gelatina Grande • 500g • Con margarita</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 75.00</p>
-                    <button onclick="agregarAlCarrito('Gelatina Grande', 22)" class="w-full bg-celesteKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-celesteKawaii/90 transition-colors">
+                    <button onclick="agregarAlCarrito('Gelatina Grande - Margarita', 75)" class="w-full bg-celesteKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-celesteKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                
             </div>
 
-        </div>
-<!-- Sección Productos -->
-    <section id="productos" class="py-16 px-4 patronFondo">
-        <div class="container mx-auto max-w-6xl">
-            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
+            <!-- Con temática -->
+            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12 categoria-titulo" data-cat="tematica">
                 Con temática 🍡
             </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Producto 1 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/5a/0d/3d/5a0d3ddaef6dd12daf785f20076054dc.jpg" img="" width="200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" id="grid-tematica">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina tematica foto">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina Temática Foto')">🤍</button>
+                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(19)">
+                        <img src="https://i.pinimg.com/736x/5a/0d/3d/5a0d3ddaef6dd12daf785f20076054dc.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Temática Foto</h3>
                     <p class="font-cuerpo text-lg mb-4">1 Gelatina con foto • 250g • Muy tierna</p>
@@ -552,47 +832,41 @@
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 2 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/25/aa/7f/25aa7fe6bf760275f896243fa5370c83.jpg" img="" width="200">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina mediana bear pareja">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina Mediana - Bear Pareja')">🤍</button>
+                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(20)">
+                        <img src="https://i.pinimg.com/736x/25/aa/7f/25aa7fe6bf760275f896243fa5370c83.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Mediana - Bear Pareja</h3>
-                    <p class="font-cuerpo text-lg mb-4"> Gelatina Bear • 250g • Muy bonita</p>
+                    <p class="font-cuerpo text-lg mb-4">Gelatina Bear • 250g • Muy bonita</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 65.00</p>
                     <button onclick="agregarAlCarrito('Gelatina Mediana - Bear Pareja', 65)" class="w-full bg-celesteKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-celesteKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 3 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/ba/d6/9f/bad69fbe8c2514575d4887b0c7e98b61.jpg" img="" width="120">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="hello kitty">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Hello Kitty')">🤍</button>
+                    <div class="bg-gradient-to-br from-amarilloKawaii/30 to-verdeKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(21)">
+                        <img src="https://i.pinimg.com/736x/ba/d6/9f/bad69fbe8c2514575d4887b0c7e98b61.jpg" width="120" class="rounded-xl transition-transform hover:scale-110">
                     </div>
-                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2"> Hello Kitty</h3>
+                    <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Hello Kitty</h3>
                     <p class="font-cuerpo text-lg mb-4">Diseño completo • 500g • Ideal para fiestas</p>
                     <p class="font-kawaii text-3xl text-rosaKawaii mb-4">S/ 60.00</p>
-                    <button onclick="agregarAlCarrito(' Hello Kitty', 60)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
+                    <button onclick="agregarAlCarrito('Hello Kitty', 60)" class="w-full bg-amarilloKawaii bordeRedondo py-3 font-kawaii text-xl text-white sombraKawaii hover:bg-amarilloKawaii/90 transition-colors">
                         ¡Agregar! 🛒
                     </button>
                 </div>
             </div>
 
-        </div>
-<!-- Sección Productos -->
-    <section id="productos" class="py-16 px-4 patronFondo">
-        <div class="container mx-auto max-w-6xl">
-            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
-                Sin Azúcar🍡
+            <!-- Sin Azúcar -->
+            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12 categoria-titulo" data-cat="sinazucar">
+                Sin Azúcar 🍡
             </h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Producto 1 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/1200x/74/5f/d4/745fd41b15f6b773d078ea4c27e3c6c3.jpg" img="" width="200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" id="grid-sinazucar">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina de mango">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina de Mango')">🤍</button>
+                    <div class="bg-gradient-to-br from-rosaKawaii/30 to-lilaKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(22)">
+                        <img src="https://i.pinimg.com/1200x/74/5f/d4/745fd41b15f6b773d078ea4c27e3c6c3.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina de Mango</h3>
                     <p class="font-cuerpo text-lg mb-4">1 Gelatina • 500g • Con frutas y frutos rojos</p>
@@ -601,11 +875,10 @@
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                <!-- Producto 2 -->
-                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar">
-                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6">
-                        <img src="https://i.pinimg.com/736x/12/09/ec/1209ec369c7e462ab0bf9b2e8e83127d.jpg" img="" width="200">
+                <div class="bg-white bordeRedondo p-6 sombraKawaii efectoFlotar producto-card relative" data-nombre="gelatina mix de frutas">
+                    <button class="btn-favorito" onclick="toggleFavorito(this, 'Gelatina Mix de frutas')">🤍</button>
+                    <div class="bg-gradient-to-br from-celesteKawaii/30 to-amarilloKawaii/30 bordeRedondo h-64 flex items-center justify-center mb-6 overflow-hidden cursor-pointer" onclick="abrirLightbox(23)">
+                        <img src="https://i.pinimg.com/736x/12/09/ec/1209ec369c7e462ab0bf9b2e8e83127d.jpg" width="200" class="rounded-xl transition-transform hover:scale-110">
                     </div>
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-2">Gelatina Mix de frutas</h3>
                     <p class="font-cuerpo text-lg mb-4">1 Gelatina • 500g • Con frutas y pecanas</p>
@@ -614,79 +887,132 @@
                         ¡Agregar! 🛒
                     </button>
                 </div>
-
-                
             </div>
 
         </div>
-
-
     </section>
 
+    <!-- ===== CALCULADORA DE PRESUPUESTO ===== -->
+    <section id="calculadora" class="py-16 px-4 bg-white/50">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
+                Calcula tu Presupuesto 🧮✨
+            </h2>
+            <div class="calculadora-box">
+                <p class="font-cuerpo text-lg text-center mb-6">
+                    Ingresa cuánto quieres gastar y te decimos qué puedes comprar 💕
+                </p>
+                <div class="flex gap-4 justify-center mb-6">
+                    <span class="font-kawaii text-3xl text-rosaKawaii">S/</span>
+                    <input type="number" id="inputPresupuesto" placeholder="0.00" min="0" step="1" onkeyup="calcularPresupuesto()">
+                </div>
+                <div class="flex gap-4 justify-center mb-6">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="incluirConsultar" onchange="calcularPresupuesto()">
+                        <span class="font-cuerpo">Incluir productos a consultar precio</span>
+                    </label>
+                </div>
+                <div id="resultadoCalculadora" class="resultado-calculadora font-kawaii text-lg text-center">
+                    <p class="text-gray-400">Ingresa un monto para ver sugerencias 🎀</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Sección Servicios -->
+    <!-- ===== FORMULARIO DE PEDIDO PERSONALIZADO ===== -->
+    <section id="personalizado" class="py-16 px-4 patronFondo">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
+                ¡Crea tu Gelatina Soñada! 🎨✨
+            </h2>
+            <div class="bg-white bordeRedondo p-8 sombraKawaii">
+                <p class="font-cuerpo text-lg text-center mb-8">
+                    Cuéntanos tu idea y haremos realidad la gelatina perfecta para ti 🥰
+                </p>
+                <div class="form-personalizado">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="pedidoNombre" placeholder="Tu nombre *" required>
+                        <input type="tel" id="pedidoTelefono" placeholder="Tu WhatsApp *" required>
+                    </div>
+                    <input type="text" id="pedidoOcasion" placeholder="¿Para qué ocasión? (Cumpleaños, aniversario, etc.)">
+                    <select id="pedidoTamaño">
+                        <option value="">Selecciona un tamaño</option>
+                        <option value="Mini">Mini (100g)</option>
+                        <option value="Pequeño">Pequeño (100g)</option>
+                        <option value="Mediano">Mediano (250g)</option>
+                        <option value="Grande">Grande (500g)</option>
+                    </select>
+                    <select id="pedidoTema">
+                        <option value="">¿Tienes un tema en mente?</option>
+                        <option value="Floral">🌸 Floral</option>
+                        <option value="Animal">🐱 Animalitos</option>
+                        <option value="Personaje">🎭 Personajes</option>
+                        <option value="Foto">📸 Con foto personalizada</option>
+                        <option value="Otro">✨ Otro (especifica abajo)</option>
+                    </select>
+                    <textarea id="pedidoDescripcion" placeholder="Describe tu gelatina soñada... colores, formas, detalles especiales... ¡todo lo que imagines! 🌈" rows="4"></textarea>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="date" id="pedidoFecha" placeholder="Fecha aproximada de entrega">
+                        <select id="pedidoPresupuesto">
+                            <option value="">Rango de presupuesto</option>
+                            <option value="20-40">S/ 20 - 40</option>
+                            <option value="40-70">S/ 40 - 70</option>
+                            <option value="70-100">S/ 70 - 100</option>
+                            <option value="100+">S/ 100+</option>
+                        </select>
+                    </div>
+                                        <button onclick="enviarPedidoPersonalizado()" class="w-full bg-gradient-to-r from-rosaKawaii to-lilaKawaii bordeRedondo py-4 font-kawaii text-xl text-white sombraKawaii hover:brightness-105 transition-all mt-4">
+                        ✨ Enviar mi idea mágica ✨
+                    </button>
+                    <p id="pedidoMensaje" class="text-center mt-4 font-kawaii"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECCIÓN SERVICIOS ===== -->
     <section id="servicios" class="py-16 px-4 bg-white/50">
         <div class="container mx-auto max-w-6xl">
             <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
                 Lo que ofrecemos ✨
             </h2>
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-gradient-to-br from-rosaKawaii/20 to-lilaKawaii/20 bordeRedondo p-8 sombraSuave efectoFlotar">
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-4 flex items-center gap-3">
-                        <span class="text-4xl">🎂</span>
-                        Celebraciones Especiales
+                        <span class="text-4xl">🎂</span> Celebraciones Especiales
                     </h3>
                     <p class="font-cuerpo text-lg leading-relaxed mb-4">
-                        Perfectas para cumpleaños, baby shower, bodas y cualquier evento importante. 
-                        Creamos diseños personalizados que harán que tu fiesta sea única y mágica.
+                        Perfectas para cumpleaños, baby shower, bodas y cualquier evento importante. Creamos diseños personalizados que harán que tu fiesta sea única y mágica.
                     </p>
                     <ul class="space-y-2 font-cuerpo text-lg">
-                        <li class="flex items-center gap-2">
-                            <span class="text-rosaKawaii text-xl">✓</span> Diseños temáticos
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-rosaKawaii text-xl">✓</span> Envíos a domicilio
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-rosaKawaii text-xl">✓</span> Paquetes para grupos
-                        </li>
-                        
+                        <li class="flex items-center gap-2"><span class="text-rosaKawaii text-xl">✓</span> Diseños temáticos</li>
+                        <li class="flex items-center gap-2"><span class="text-rosaKawaii text-xl">✓</span> Envíos a domicilio</li>
+                        <li class="flex items-center gap-2"><span class="text-rosaKawaii text-xl">✓</span> Paquetes para grupos</li>
                     </ul>
-                    
                 </div>
-
                 <div class="bg-gradient-to-br from-celesteKawaii/20 to-amarilloKawaii/20 bordeRedondo p-8 sombraSuave efectoFlotar">
                     <h3 class="font-kawaii text-2xl text-textoKawaii mb-4 flex items-center gap-3">
                         <span class="text-4xl">💌</span> Regalos Mágicos
                     </h3>
                     <p class="font-cuerpo text-lg leading-relaxed mb-4">
-                        Un detalle hermoso para regalar a tus seres queridos. Cada gelatina es una obra de arte comestible
-                        que transmite cariño, alegría y mucha creatividad.
+                        Un detalle hermoso para regalar a tus seres queridos. Cada gelatina es una obra de arte comestible que transmite cariño, alegría y mucha creatividad.
                     </p>
                     <ul class="space-y-2 font-cuerpo text-lg">
-                        <li class="flex items-center gap-2">
-                            <span class="text-celesteKawaii text-xl">✓</span> Empaque decorado
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-celesteKawaii text-xl">✓</span> Tarjeta personalizada
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-celesteKawaii text-xl">✓</span> Sorpresa incluida
-                        </li>
+                        <li class="flex items-center gap-2"><span class="text-celesteKawaii text-xl">✓</span> Empaque decorado</li>
+                        <li class="flex items-center gap-2"><span class="text-celesteKawaii text-xl">✓</span> Tarjeta personalizada</li>
+                        <li class="flex items-center gap-2"><span class="text-celesteKawaii text-xl">✓</span> Sorpresa incluida</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Sección Contacto -->
+    <!-- ===== SECCIÓN CONTACTO ===== -->
     <section id="contacto" class="py-16 px-4 patronFondo">
         <div class="container mx-auto max-w-4xl">
             <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-12">
                 Contáctanos 📞
             </h2>
-
             <div class="bg-white bordeRedondo p-8 sombraKawaii">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
@@ -694,32 +1020,15 @@
                         <p class="font-cuerpo text-lg mb-6">
                             Estamos aquí para ayudarte, resolver tus dudas y crear el diseño perfecto para ti.
                         </p>
-                        
                         <div class="space-y-4 font-cuerpo text-lg">
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">📱</span>
-                                <span>WhatsApp: 934 493 012</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">📷</span>
-                                <span>Instagram: @magic.jellycake</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">📘</span>
-                                <span>Facebook: Magic Jelly Cake</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="text-2xl">📍</span>
-                                <span>Disponibles para todo Lima Metropolitana</span>
-                            </div>
+                            <div class="flex items-center gap-3"><span class="text-2xl">📱</span><span>WhatsApp: 934 493 012</span></div>
+                            <div class="flex items-center gap-3"><span class="text-2xl">📷</span><span>Instagram: @magic.jellycake</span></div>
+                            <div class="flex items-center gap-3"><span class="text-2xl">📘</span><span>Facebook: Magic Jelly Cake</span></div>
+                            <div class="flex items-center gap-3"><span class="text-2xl">📍</span><span>Disponibles para todo Lima Metropolitana</span></div>
                         </div>
                     </div>
-
                     <div class="bg-gradient-to-br from-rosaKawaii/20 to-lilaKawaii/20 bordeRedondo p-6 flex flex-col justify-center items-center text-center">
-                           <img 
-                         src="https://i.pinimg.com/736x/e3/4e/c9/e34ec92a6fa231a0db925f888c356f0a.jpg" 
-                         alt="Gatito mágico de color morado con una varita de estrella" 
-                         width="300" />
+                        <img src="https://i.pinimg.com/736x/e3/4e/c9/e34ec92a6fa231a0db925f888c356f0a.jpg" alt="Lumi" width="200" class="rounded-2xl mb-4">
                         <h4 class="font-kawaii text-2xl text-textoKawaii mb-2">Lumi te espera!</h4>
                         <p class="font-cuerpo text-lg">Siempre lista para crear cosas hermosas para ti 🥰</p>
                     </div>
@@ -728,172 +1037,63 @@
         </div>
     </section>
 
-    <!-- Carrito de Compras -->
-    <div id="carritoPanel" class="fixed top-0 right-0 h-full w-full max-w-sm bg-white bordeRedondo shadow-2xl z-50 transform translate-x-full transition-all duration-300 ease-in-out">
-        <div class="p-6 h-full flex flex-col">
-            <div class="flex justify-between items-center border-b pb-4 mb-4">
-                <h3 class="font-kawaii text-2xl text-textoKawaii">Tu Carrito 🛒</h3>
-                <button onclick="cerrarCarrito()" class="text-3xl text-textoKawaii/70 hover:text-rosaKawaii transition-colors">&times;</button>
-            </div>
-
-            <div id="listaCarrito" class="flex-1 overflow-y-auto">
-                <p class="text-center text-gray-500 mt-10 text-lg">Tu carrito está vacío 😔</p>
-            </div>
-
-            <div class="border-t pt-5 mt-4">
-                <div class="flex justify-between text-2xl font-bold text-textoKawaii mb-5">
-                    <span>Total:</span>
-                    <span id="totalCarrito">S/ 0.00</span>
+    <!-- ===== CLIENTES SATISFECHOS ===== -->
+    <section class="py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-4">
+                Pedidos Entregados 💖
+            </h2>
+            <p class="text-center text-lg mb-10">Gracias por confiar en Magic Jelly Cake ✨</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white bordeRedondo p-4 sombraKawaii efectoFlotar cursor-pointer" onclick="abrirLightbox(24)">
+                    <img src="https://i.pinimg.com/736x/8d/0d/89/8d0d89138138525f282143f425848a98.jpg" class="w-full h-64 object-cover bordeRedondo mb-4">
+                    <h3 class="font-kawaii text-xl text-textoKawaii">Pedido para María 🎂</h3>
+                    <p class="mt-2">Gelatina floral personalizada para cumpleaños.</p>
+                    <div class="mt-3 text-yellow-500 text-lg">⭐⭐⭐⭐⭐</div>
                 </div>
-                <button
-    onclick="enviarWhatsApp()"
-    class="w-full bg-gradient-to-r from-rosaKawaii to-lilaKawaii bordeRedondo py-4 font-kawaii text-xl text-white sombraKawaii hover:brightness-105 transition-all">
-    Finalizar Compra ✨
-</button>
-                <button onclick="vaciarCarrito()" class="w-full mt-3 bg-white bordeRedondo py-3 font-cuerpo text-lg text-textoKawaii border-2 border-rosaKawaii hover:bg-rosaKawaii/10 transition-colors">
-                    Vaciar Carrito 🗑️
-                </button>
+                <div class="bg-white bordeRedondo p-4 sombraKawaii efectoFlotar cursor-pointer" onclick="abrirLightbox(25)">
+                    <img src="https://i.pinimg.com/736x/ab/79/90/ab799080d9c8dfc0b5f7b15c209d88c6.jpg" class="w-full h-64 object-cover bordeRedondo mb-4">
+                    <h3 class="font-kawaii text-xl text-textoKawaii">Pedido para Andrea 🌸</h3>
+                    <p class="mt-2">Gelatina temática para aniversario.</p>
+                    <div class="mt-3 text-yellow-500 text-lg">⭐⭐⭐⭐⭐</div>
+                </div>
+                <div class="bg-white bordeRedondo p-4 sombraKawaii efectoFlotar cursor-pointer" onclick="abrirLightbox(26)">
+                    <img src="https://i.pinimg.com/736x/07/12/4b/07124b69013513d53cc8e6cec25dfb11.jpg" class="w-full h-64 object-cover bordeRedondo mb-4">
+                    <h3 class="font-kawaii text-xl text-textoKawaii">Pedido para Sofía 💕</h3>
+                    <p class="mt-2">Box floral para regalo sorpresa.</p>
+                    <div class="mt-3 text-yellow-500 text-lg">⭐⭐⭐⭐⭐</div>
+                </div>
+            </div>
+            <div class="mt-12 bg-white bordeRedondo p-8 sombraKawaii">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                    <div><div class="text-4xl font-bold text-rosaKawaii">150+</div><div>Pedidos Entregados</div></div>
+                    <div><div class="text-4xl font-bold text-lilaKawaii">98%</div><div>Clientes Felices</div></div>
+                    <div><div class="text-4xl font-bold text-celesteKawaii">5★</div><div>Valoración</div></div>
+                    <div><div class="text-4xl font-bold text-verdeKawaii">2026</div><div>Temporada Actual</div></div>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- CLIENTES SATISFECHOS -->
-<section class="py-16 px-4">
-    <div class="container mx-auto max-w-6xl">
+    </section>
 
-        <h2 class="font-kawaii text-[clamp(2rem,6vw,3.5rem)] text-center text-textoKawaii mb-4">
-            Pedidos Entregados 💖
-        </h2>
+    <!-- ===== RESEÑAS ===== -->
+    <section class="reviews" id="seccionResenas">
+        <h2>⭐ Opiniones de Clientes</h2>
+        <input type="text" id="nombre" placeholder="Tu nombre">
+        <select id="estrellas">
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+        </select>
+        <textarea id="comentario" placeholder="Escribe tu opinión"></textarea>
+        <button onclick="enviarResena()">Enviar Opinión</button>
+        <p id="mensaje"></p>
+        <div id="listaResenas"></div>
+        <button id="btnMasResenas" onclick="toggleResenas()">Ver más opiniones ▼</button>
+    </section>
 
-        <p class="text-center text-lg mb-10">
-            Gracias por confiar en Magic Jelly Cake ✨
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            <!-- Cliente 1 -->
-            <div class="bg-white bordeRedondo p-4 sombraKawaii efectoFlotar">
-                <img src="https://i.pinimg.com/736x/8d/0d/89/8d0d89138138525f282143f425848a98.jpg"
-                     class="w-full h-64 object-cover bordeRedondo mb-4">
-
-                <h3 class="font-kawaii text-xl text-textoKawaii">
-                    Pedido para María 🎂
-                </h3>
-
-                <p class="mt-2">
-                    Gelatina floral personalizada para cumpleaños.
-                </p>
-
-                <div class="mt-3 text-yellow-500 text-lg">
-                    ⭐⭐⭐⭐⭐
-                </div>
-            </div>
-
-            <!-- Cliente 2 -->
-            <div class="bg-white bordeRedondo p-4 sombraKawaii efectoFlotar">
-                <img src="https://i.pinimg.com/736x/ab/79/90/ab799080d9c8dfc0b5f7b15c209d88c6.jpg"
-                     class="w-full h-64 object-cover bordeRedondo mb-4">
-
-                <h3 class="font-kawaii text-xl text-textoKawaii">
-                    Pedido para Andrea 🌸
-                </h3>
-
-                <p class="mt-2">
-                    Gelatina temática para aniversario.
-                </p>
-
-                <div class="mt-3 text-yellow-500 text-lg">
-                    ⭐⭐⭐⭐⭐
-                </div>
-            </div>
-
-            <!-- Cliente 3 -->
-            <div class="bg-white bordeRedondo p-4 sombraKawaii efectoFlotar">
-                <img src="https://i.pinimg.com/736x/07/12/4b/07124b69013513d53cc8e6cec25dfb11.jpg"
-                     class="w-full h-64 object-cover bordeRedondo mb-4">
-
-                <h3 class="font-kawaii text-xl text-textoKawaii">
-                    Pedido para Sofía 💕
-                </h3>
-
-                <p class="mt-2">
-                    Box floral para regalo sorpresa.
-                </p>
-
-                <div class="mt-3 text-yellow-500 text-lg">
-                    ⭐⭐⭐⭐⭐
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Estadísticas -->
-        <div class="mt-12 bg-white bordeRedondo p-8 sombraKawaii">
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-
-                <div>
-                    <div class="text-4xl font-bold text-rosaKawaii">150+</div>
-                    <div>Pedidos Entregados</div>
-                </div>
-
-                <div>
-                    <div class="text-4xl font-bold text-lilaKawaii">98%</div>
-                    <div>Clientes Felices</div>
-                </div>
-
-                <div>
-                    <div class="text-4xl font-bold text-celesteKawaii">5★</div>
-                    <div>Valoración</div>
-                </div>
-
-                <div>
-                    <div class="text-4xl font-bold text-verdeKawaii">2026</div>
-                    <div>Temporada Actual</div>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-</section>
-    <section class="reviews">
-  <h2>⭐ Opiniones de Clientes</h2>
-
-  <input
-    type="text"
-    id="nombre"
-    placeholder="Tu nombre"
-  >
-
-  <select id="estrellas">
-    <option value="5">⭐⭐⭐⭐⭐</option>
-    <option value="4">⭐⭐⭐⭐</option>
-    <option value="3">⭐⭐⭐</option>
-    <option value="2">⭐⭐</option>
-    <option value="1">⭐</option>
-  </select>
-
-  <textarea
-    id="comentario"
-    placeholder="Escribe tu opinión"
-  ></textarea>
-
-  <button onclick="enviarResena()">
-    Enviar Opinión
-  </button>
-
-  <p id="mensaje"></p>
- <div id="listaResenas"></div>
-
-<button id="btnMasResenas" onclick="toggleResenas()">
-    Ver más opiniones ▼
-</button>
-</section>
-
-    <!-- Footer -->
-   
-</section>
+    <!-- ===== FOOTER ===== -->
     <footer class="bg-gradient-to-r from-rosaKawaii/30 to-lilaKawaii/30 py-8 px-4 mt-16">
         <div class="container mx-auto text-center">
             <h3 class="font-kawaii text-2xl text-textoKawaii mb-3">Magic Jelly Cake</h3>
@@ -902,79 +1102,598 @@
         </div>
     </footer>
 
-    <!-- JavaScript Funcional del Carrito -->
+    <!-- ===== CARRITO DE COMPRAS ===== -->
+    <div id="carritoPanel" class="fixed top-0 right-0 h-full w-full max-w-sm bg-white bordeRedondo shadow-2xl z-50 transform translate-x-full transition-all duration-300 ease-in-out">
+        <div class="p-6 h-full flex flex-col">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h3 class="font-kawaii text-2xl text-textoKawaii">Tu Carrito 🛒</h3>
+                <button onclick="cerrarCarrito()" class="text-3xl text-textoKawaii/70 hover:text-rosaKawaii transition-colors">&times;</button>
+            </div>
+
+            <!-- Cupón de descuento -->
+            <div class="mb-4 pb-4 border-b border-rosaKawaii/20">
+                <p class="font-kawaii text-sm mb-2">¿Tienes un cupón? 🎁</p>
+                <div class="flex gap-2">
+                    <input type="text" id="inputCupon" class="cupon-input flex-1" placeholder="Ej: MAGIC10">
+                    <button onclick="aplicarCupon()" class="bg-rosaKawaii text-white px-4 py-2 rounded-2xl font-kawaii hover:bg-rosaKawaii/80 transition">Aplicar</button>
+                </div>
+                <p id="mensajeCupon" class="text-sm mt-2 font-cuerpo"></p>
+            </div>
+
+            <div id="listaCarrito" class="flex-1 overflow-y-auto">
+                <p class="text-center text-gray-500 mt-10 text-lg">Tu carrito está vacío 😔</p>
+            </div>
+
+            <div class="border-t pt-5 mt-4">
+                <div id="infoDescuento" class="hidden mb-3 p-3 bg-verdeKawaii/20 rounded-2xl text-center">
+                    <p class="font-kawaii text-sm">🎉 Descuento aplicado: <span id="porcentajeDescuento">0%</span></p>
+                    <p class="font-cuerpo text-sm line-through text-gray-400">Antes: S/ <span id="precioOriginal">0.00</span></p>
+                </div>
+                <div class="flex justify-between text-2xl font-bold text-textoKawaii mb-5">
+                    <span>Total:</span>
+                    <span id="totalCarrito">S/ 0.00</span>
+                </div>
+                <button onclick="enviarWhatsApp()" class="w-full bg-gradient-to-r from-rosaKawaii to-lilaKawaii bordeRedondo py-4 font-kawaii text-xl text-white sombraKawaii hover:brightness-105 transition-all mb-3">
+                    Finalizar Compra ✨
+                </button>
+                <button onclick="copiarPedido()" class="w-full bg-celesteKawaii bordeRedondo py-3 font-kawaii text-lg text-white sombraKawaii hover:bg-celesteKawaii/90 transition-colors mb-3">
+                    📋 Copiar Pedido
+                </button>
+                <button onclick="vaciarCarrito()" class="w-full bg-white bordeRedondo py-3 font-cuerpo text-lg text-textoKawaii border-2 border-rosaKawaii hover:bg-rosaKawaii/10 transition-colors">
+                    Vaciar Carrito 🗑️
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // Variables globales del carrito
+        // ==================== VARIABLES GLOBALES ====================
         let carrito = [];
+        let favoritos = [];
+        let mostrandoTodas = false;
+        let totalResenas = 0;
+        let descuentoActivo = 0;
+        let cuponAplicado = '';
+
         const contadorElemento = document.getElementById('contador');
         const listaCarritoElemento = document.getElementById('listaCarrito');
         const totalCarritoElemento = document.getElementById('totalCarrito');
         const carritoPanel = document.getElementById('carritoPanel');
         const btnCarrito = document.getElementById('btnCarrito');
 
-        // Abrir carrito
+        // ==================== IMÁGENES PARA LIGHTBOX ====================
+        const imagenesLightbox = [
+            "https://i.pinimg.com/736x/a7/d4/87/a7d48739b9da50641199c0e6478cfeaf.jpg",
+            "https://i.pinimg.com/736x/70/ca/a8/70caa80925efed27822f44497571fe58.jpg",
+            "https://i.pinimg.com/736x/6b/76/c8/6b76c8827eb74509106212bc5527de24.jpg",
+            "https://i.pinimg.com/736x/64/c1/12/64c11201c408e248c847a99e4852d43b.jpg",
+            "https://i.pinimg.com/736x/e3/4e/c9/e34ec92a6fa231a0db925f888c356f0a.jpg",
+            "https://i.pinimg.com/736x/99/49/e1/9949e14bb30ca447059b099cb5246bf3.jpg",
+            "https://i.pinimg.com/736x/86/6b/b3/866bb38a82335bb16220cf093d4d339b.jpg",
+            "https://i.pinimg.com/736x/cd/6a/b6/cd6ab628f197944ae2595fb13bd04af9.jpg",
+            "https://i.pinimg.com/736x/a8/03/e0/a803e0ba383534d912c9362e817bbc4a.jpg",
+            "https://i.pinimg.com/736x/46/9c/e3/469ce3bfededfecd059863728d66005b.jpg",
+            "https://i.pinimg.com/736x/d8/46/c6/d846c6521d42ccd854eac9bf6e74af94.jpg",
+            "https://i.pinimg.com/736x/42/5c/b7/425cb7935d182fef6b3246beaec8da93.jpg",
+            "https://i.pinimg.com/736x/a5/99/c9/a599c98aa931ff286cf6cafe4ad4536b.jpg",
+            "https://i.pinimg.com/736x/ef/13/48/ef134875fce70f94355e55a7f19a3a1c.jpg",
+            "https://i.pinimg.com/736x/ed/ba/e7/edbae74f7d5e27778712c67105866c92.jpg",
+            "https://i.pinimg.com/736x/8b/89/fe/8b89fe30bfba4c89ecaf9b6c0f86179a.jpg",
+            "https://i.pinimg.com/736x/e8/e0/80/e8e080731cec36031e093a236a2684fb.jpg",
+            "https://i.pinimg.com/736x/f7/3a/9d/f73a9d1a011c813b7e42fe5ed4985602.jpg",
+            "https://i.pinimg.com/736x/8b/8f/0c/8b8f0ca8d19d703c9f86619b15d3addc.jpg",
+            "https://i.pinimg.com/736x/5a/0d/3d/5a0d3ddaef6dd12daf785f20076054dc.jpg",
+            "https://i.pinimg.com/736x/25/aa/7f/25aa7fe6bf760275f896243fa5370c83.jpg",
+            "https://i.pinimg.com/736x/ba/d6/9f/bad69fbe8c2514575d4887b0c7e98b61.jpg",
+            "https://i.pinimg.com/1200x/74/5f/d4/745fd41b15f6b773d078ea4c27e3c6c3.jpg",
+            "https://i.pinimg.com/736x/12/09/ec/1209ec369c7e462ab0bf9b2e8e83127d.jpg",
+            "https://i.pinimg.com/736x/8d/0d/89/8d0d89138138525f282143f425848a98.jpg",
+            "https://i.pinimg.com/736x/ab/79/90/ab799080d9c8dfc0b5f7b15c209d88c6.jpg",
+            "https://i.pinimg.com/736x/07/12/4b/07124b69013513d53cc8e6cec25dfb11.jpg"
+        ];
+        let lightboxActual = 0;
+
+        // ==================== LOCALSTORAGE ====================
+        function guardarCarrito() {
+            localStorage.setItem('magicJellyCarrito', JSON.stringify(carrito));
+        }
+
+        function cargarCarrito() {
+            const guardado = localStorage.getItem('magicJellyCarrito');
+            if (guardado) {
+                carrito = JSON.parse(guardado);
+                actualizarCarrito();
+            }
+        }
+
+        function guardarFavoritos() {
+            localStorage.setItem('magicJellyFavoritos', JSON.stringify(favoritos));
+        }
+
+        function cargarFavoritos() {
+            const guardado = localStorage.getItem('magicJellyFavoritos');
+            if (guardado) {
+                favoritos = JSON.parse(guardado);
+                document.querySelectorAll('.btn-favorito').forEach(btn => {
+                    const nombre = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    if (favoritos.includes(nombre)) {
+                        btn.classList.add('activo');
+                        btn.textContent = '❤️';
+                    }
+                });
+            }
+        }
+
+        function guardarResenas() {
+            localStorage.setItem('magicJellyResenas', JSON.stringify(resenas));
+        }
+
+        function cargarResenasGuardadas() {
+            const guardado = localStorage.getItem('magicJellyResenas');
+            if (guardado) {
+                resenas = JSON.parse(guardado);
+                renderizarResenas();
+            }
+        }
+
+        // ==================== NOTIFICACIONES TOAST ====================
+        function mostrarToast(mensaje, tipo = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            
+            const iconos = {
+                success: '✅',
+                error: '❌',
+                info: '✨'
+            };
+            
+            toast.innerHTML = `<span style="font-size:24px">${iconos[tipo] || '✨'}</span><span style="font-weight:bold; color:#7B4173">${mensaje}</span>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ==================== MENÚ MÓVIL ====================
+        function abrirMenuMovil() {
+            document.getElementById('menuMovil').style.display = 'flex';
+        }
+
+        function cerrarMenuMovil() {
+            document.getElementById('menuMovil').style.display = 'none';
+        }
+
+        // ==================== MODO OSCURO ====================
+        function toggleModoOscuro() {
+            document.body.classList.toggle('modo-oscuro');
+            const btn = document.getElementById('btnModo');
+            const esOscuro = document.body.classList.contains('modo-oscuro');
+            btn.innerHTML = esOscuro ? '<i class="fa fa-sun-o text-xl"></i>' : '<i class="fa fa-moon-o text-xl"></i>';
+            localStorage.setItem('magicJellyModoOscuro', esOscuro);
+        }
+
+        function cargarModoOscuro() {
+            if (localStorage.getItem('magicJellyModoOscuro') === 'true') {
+                document.body.classList.add('modo-oscuro');
+                document.getElementById('btnModo').innerHTML = '<i class="fa fa-sun-o text-xl"></i>';
+            }
+        }
+
+        // ==================== BOTÓN VOLVER ARRIBA ====================
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('btnArriba');
+            if (window.scrollY > 400) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        // ==================== BUSCADOR ====================
+        function filtrarProductos() {
+            const texto = document.getElementById('buscador').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.producto-card');
+            const titulos = document.querySelectorAll('.categoria-titulo');
+            let encontrados = 0;
+
+            cards.forEach(card => {
+                const nombre = card.getAttribute('data-nombre');
+                if (nombre.includes(texto)) {
+                    card.style.display = 'block';
+                    encontrados++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            titulos.forEach(titulo => {
+                const cat = titulo.getAttribute('data-cat');
+                const grid = document.getElementById('grid-' + cat);
+                const visibles = grid.querySelectorAll('.producto-card[style*="display: block"], .producto-card:not([style*="display: none"])');
+                titulo.style.display = visibles.length > 0 ? 'block' : 'none';
+            });
+
+            const msg = document.getElementById('resultadosBusqueda');
+            if (texto === '') {
+                msg.textContent = '';
+                cards.forEach(c => c.style.display = 'block');
+                titulos.forEach(t => t.style.display = 'block');
+            } else if (encontrados === 0) {
+                msg.textContent = 'No se encontraron productos 😔';
+            } else {
+                msg.textContent = `¡Encontramos ${encontrados} producto(s)! 🎉`;
+            }
+        }
+
+        // ==================== FAVORITOS ====================
+        function toggleFavorito(btn, nombre) {
+            const index = favoritos.indexOf(nombre);
+            if (index === -1) {
+                favoritos.push(nombre);
+                btn.classList.add('activo');
+                btn.textContent = '❤️';
+                mostrarToast('¡Agregado a favoritos!', 'success');
+            } else {
+                favoritos.splice(index, 1);
+                btn.classList.remove('activo');
+                btn.textContent = '🤍';
+                mostrarToast('Eliminado de favoritos', 'info');
+            }
+            guardarFavoritos();
+        }
+
+        // ==================== LIGHTBOX / GALERÍA ====================
+        function abrirLightbox(indice) {
+            lightboxActual = indice;
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            const contador = document.getElementById('lightbox-contador');
+            
+            img.src = imagenesLightbox[indice];
+            contador.textContent = `${indice + 1} / ${imagenesLightbox.length}`;
+            lightbox.classList.add('activo');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function cerrarLightbox(event) {
+            if (event.target.id === 'lightbox') {
+                cerrarLightboxDirecto();
+            }
+        }
+
+        function cerrarLightboxDirecto() {
+            document.getElementById('lightbox').classList.remove('activo');
+            document.body.style.overflow = 'auto';
+        }
+
+        function navegarLightbox(direccion) {
+            lightboxActual += direccion;
+            if (lightboxActual < 0) lightboxActual = imagenesLightbox.length - 1;
+            if (lightboxActual >= imagenesLightbox.length) lightboxActual = 0;
+            
+            document.getElementById('lightbox-img').src = imagenesLightbox[lightboxActual];
+            document.getElementById('lightbox-contador').textContent = `${lightboxActual + 1} / ${imagenesLightbox.length}`;
+        }
+
+        // Teclado para lightbox
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('lightbox').classList.contains('activo')) return;
+            if (e.key === 'Escape') cerrarLightboxDirecto();
+            if (e.key === 'ArrowLeft') navegarLightbox(-1);
+            if (e.key === 'ArrowRight') navegarLightbox(1);
+        });
+
+        // ==================== CONFETI ====================
+        function lanzarConfeti() {
+            const container = document.getElementById('confeti-container');
+            const colores = ['#FFC2E2', '#E4C1F9', '#C1EFFF', '#FFEAA7', '#D4F0C6', '#ff6b6b', '#ffd93d'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confeti = document.createElement('div');
+                confeti.className = 'confeti';
+                confeti.style.left = Math.random() * 100 + '%';
+                confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+                confeti.style.width = (Math.random() * 10 + 5) + 'px';
+                confeti.style.height = (Math.random() * 10 + 5) + 'px';
+                confeti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confeti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confeti.style.animationDelay = (Math.random() * 0.5) + 's';
+                container.appendChild(confeti);
+                
+                setTimeout(() => confeti.remove(), 3500);
+            }
+        }
+
+        // ==================== CUPONES DE DESCUENTO ====================
+        const cuponesValidos = {
+            'MAGIC10': 10,
+            'MAGIC20': 20,
+            'BIENVENIDA': 15,
+            'CUMPLEAÑOS': 25,
+            'LUMI': 10,
+            'KAWAII': 5
+        };
+
+        function aplicarCupon() {
+            const input = document.getElementById('inputCupon');
+            const mensaje = document.getElementById('mensajeCupon');
+            const codigo = input.value.trim().toUpperCase();
+            
+            if (!codigo) {
+                mensaje.textContent = 'Ingresa un código 🎀';
+                mensaje.style.color = '#7B4173';
+                return;
+            }
+            
+            if (cuponAplicado) {
+                mensaje.textContent = 'Ya aplicaste un cupón. Vacía el carrito para usar otro.';
+                mensaje.style.color = '#ff6b6b';
+                return;
+            }
+            
+            if (cuponesValidos[codigo]) {
+                descuentoActivo = cuponesValidos[codigo];
+                cuponAplicado = codigo;
+                input.classList.add('cupon-aplicado');
+                input.disabled = true;
+                mensaje.innerHTML = `🎉 ¡Cupón <b>${codigo}</b> aplicado! ${descuentoActivo}% de descuento`;
+                mensaje.style.color = '#2d8a3e';
+                mostrarToast(`¡Descuento del ${descuentoActivo}% aplicado! 🎉`, 'success');
+                actualizarCarrito();
+            } else {
+                mensaje.textContent = 'Código no válido 😔 Intenta con MAGIC10';
+                mensaje.style.color = '#ff6b6b';
+                mostrarToast('Cupón no válido', 'error');
+            }
+        }
+
+        // ==================== CALCULADORA DE PRESUPUESTO ====================
+        function calcularPresupuesto() {
+            const input = document.getElementById('inputPresupuesto');
+            const incluirConsultar = document.getElementById('incluirConsultar').checked;
+            const resultado = document.getElementById('resultadoCalculadora');
+            const presupuesto = parseFloat(input.value) || 0;
+            
+            if (presupuesto <= 0) {
+                resultado.innerHTML = '<p class="text-gray-400">Ingresa un monto para ver sugerencias 🎀</p>';
+                return;
+            }
+            
+            // Productos con precios definidos
+            const productosPrecios = [
+                { nombre: 'Gelatina Pequeña - Rosa Naranja', precio: 25, categoria: 'Pequeño' },
+                { nombre: 'Gelatina pequeña - Rosa rosada', precio: 30, categoria: 'Pequeño' },
+                { nombre: 'Gelatina pequeña - Rosa Lila', precio: 30, categoria: 'Pequeño' },
+                { nombre: 'Gelatina pequeña - Corazon cereza', precio: 30, categoria: 'Pequeño' },
+                { nombre: 'Gelatina pequeña - Margarita', precio: 30, categoria: 'Pequeño' },
+                { nombre: 'Gelatina pequeña - Petalos', precio: 30, categoria: 'Pequeño' },
+                { nombre: 'Gelatina Mediano - Flor', precio: 45, categoria: 'Mediano' },
+                { nombre: 'Gelatina Pasión Mediano', precio: 40, categoria: 'Mediano' },
+                { nombre: 'Gelatina Mediano - Mix flores', precio: 50, categoria: 'Mediano' },
+                { nombre: 'Gelatina Grande - Fresas', precio: 70, categoria: 'Grande' },
+                { nombre: 'Gelatina Grande - Margarita', precio: 75, categoria: 'Grande' },
+                { nombre: 'Gelatina Temática Foto', precio: 65, categoria: 'Temática' },
+                { nombre: 'Gelatina Mediana - Bear Pareja', precio: 65, categoria: 'Temática' },
+                { nombre: 'Hello Kitty', precio: 60, categoria: 'Temática' },
+                { nombre: 'Gelatina de Mango', precio: 80, categoria: 'Sin Azúcar' },
+                { nombre: 'Gelatina Mix de frutas', precio: 90, categoria: 'Sin Azúcar' }
+            ];
+            
+            // Productos a consultar
+            const productosConsultar = [
+                { nombre: 'Box Pequeño Cumpleañero', categoria: 'Box Mini' },
+                { nombre: 'Box Pequeño Tropical', categoria: 'Box Mini' },
+                { nombre: 'Box Mini Rosas', categoria: 'Box Mini' }
+            ];
+            
+            let html = '';
+            let encontrados = 0;
+            
+            // Buscar productos que entren en el presupuesto
+            const aptos = productosPrecios.filter(p => p.precio <= presupuesto).sort((a, b) => a.precio - b.precio);
+            
+            if (aptos.length > 0) {
+                html += `<p class="text-rosaKawaii font-bold mb-3">🎉 ¡Puedes comprar estos productos!</p>`;
+                html += `<div class="space-y-2">`;
+                aptos.forEach(p => {
+                    const sobra = presupuesto - p.precio;
+                    html += `
+                        <div class="flex justify-between items-center bg-white p-3 rounded-xl">
+                            <div class="text-left">
+                                <span class="font-bold">${p.nombre}</span>
+                                <span class="text-sm text-gray-500 block">${p.categoria}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-bold text-rosaKawaii">S/ ${p.precio.toFixed(2)}</span>
+                                ${sobra > 0 ? `<span class="text-xs text-green-500 block">Te sobra S/ ${sobra.toFixed(2)}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                encontrados = aptos.length;
+            }
+            
+            // Combinaciones posibles
+            const combinaciones = [];
+            for (let i = 0; i < aptos.length; i++) {
+                for (let j = i + 1; j < aptos.length; j++) {
+                    const total = aptos[i].precio + aptos[j].precio;
+                    if (total <= presupuesto) {
+                        combinaciones.push({
+                            items: [aptos[i], aptos[j]],
+                            total: total
+                        });
+                    }
+                }
+            }
+            
+            if (combinaciones.length > 0 && presupuesto >= 50) {
+                html += `<p class="text-lilaKawaii font-bold mt-4 mb-3">💝 ¡O combina 2 productos!</p>`;
+                html += `<div class="space-y-2">`;
+                combinaciones.slice(0, 3).forEach(c => {
+                    html += `
+                        <div class="bg-lilaKawaii/10 p-3 rounded-xl text-left">
+                            <span class="text-sm">${c.items[0].nombre} + ${c.items[1].nombre}</span>
+                            <span class="block font-bold text-lilaKawaii">Total: S/ ${c.total.toFixed(2)}</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+            
+            // Productos a consultar
+            if (incluirConsultar) {
+                html += `<p class="text-celesteKawaii font-bold mt-4 mb-3">📞 También puedes consultar precios de:</p>`;
+                html += `<div class="space-y-2">`;
+                productosConsultar.forEach(p => {
+                    html += `
+                        <div class="bg-celesteKawaii/10 p-3 rounded-xl text-left">
+                            <span class="font-bold">${p.nombre}</span>
+                            <span class="text-sm text-gray-500 block">${p.categoria} - Precio a consultar</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+            
+            if (encontrados === 0 && !incluirConsultar) {
+                html = `<p class="text-gray-400">Con S/ ${presupuesto.toFixed(2)} no alcanza para productos con precio fijo 😔<br><small>Activa "Incluir productos a consultar" para ver más opciones</small></p>`;
+            }
+            
+            resultado.innerHTML = html;
+        }
+
+        // ==================== FORMULARIO PERSONALIZADO ====================
+        function enviarPedidoPersonalizado() {
+            const nombre = document.getElementById('pedidoNombre').value.trim();
+            const telefono = document.getElementById('pedidoTelefono').value.trim();
+            const ocasion = document.getElementById('pedidoOcasion').value.trim();
+            const tamaño = document.getElementById('pedidoTamaño').value;
+            const tema = document.getElementById('pedidoTema').value;
+            const descripcion = document.getElementById('pedidoDescripcion').value.trim();
+            const fecha = document.getElementById('pedidoFecha').value;
+            const presupuesto = document.getElementById('pedidoPresupuesto').value;
+            const mensaje = document.getElementById('pedidoMensaje');
+            
+            if (!nombre || !telefono) {
+                mensaje.textContent = '❌ Nombre y teléfono son obligatorios';
+                mensaje.style.color = '#ff6b6b';
+                return;
+            }
+            
+            let textoWhatsApp = `🎨 *PEDIDO PERSONALIZADO - MAGIC JELLY CAKE* 🎨%0A%0A`;
+            textoWhatsApp += `👤 *Nombre:* ${nombre}%0A`;
+            textoWhatsApp += `📱 *Teléfono:* ${telefono}%0A`;
+            if (ocasion) textoWhatsApp += `🎉 *Ocasión:* ${ocasion}%0A`;
+            if (tamaño) textoWhatsApp += `📏 *Tamaño:* ${tamaño}%0A`;
+            if (tema) textoWhatsApp += `🎭 *Tema:* ${tema}%0A`;
+            if (descripcion) textoWhatsApp += `📝 *Descripción:* ${descripcion}%0A`;
+            if (fecha) textoWhatsApp += `📅 *Fecha deseada:* ${fecha}%0A`;
+            if (presupuesto) textoWhatsApp += `💰 *Presupuesto:* S/ ${presupuesto}%0A`;
+            
+            textoWhatsApp += `%0A✨ ¡Espero su respuesta! ✨`;
+            
+            window.open(`https://wa.me/51934493012?text=${textoWhatsApp}`, '_blank');
+            
+            mensaje.textContent = '✅ Redirigiendo a WhatsApp...';
+            mensaje.style.color = '#2d8a3e';
+            
+            // Limpiar formulario
+            setTimeout(() => {
+                document.getElementById('pedidoNombre').value = '';
+                document.getElementById('pedidoTelefono').value = '';
+                document.getElementById('pedidoOcasion').value = '';
+                document.getElementById('pedidoTamaño').value = '';
+                document.getElementById('pedidoTema').value = '';
+                document.getElementById('pedidoDescripcion').value = '';
+                document.getElementById('pedidoFecha').value = '';
+                document.getElementById('pedidoPresupuesto').value = '';
+            }, 1000);
+        }
+
+        // ==================== CARRITO ====================
         btnCarrito.addEventListener('click', () => {
             carritoPanel.classList.remove('translate-x-full');
         });
 
-        // Cerrar carrito
         function cerrarCarrito() {
             carritoPanel.classList.add('translate-x-full');
         }
 
-        // Agregar producto al carrito
         function agregarAlCarrito(nombre, precio) {
-            // Verificar si el producto ya existe
             const productoExistente = carrito.find(item => item.nombre === nombre);
             
             if (productoExistente) {
-                // Si ya existe, aumentar cantidad
                 productoExistente.cantidad += 1;
             } else {
-                // Si no existe, agregarlo con cantidad 1
-                carrito.push({
-                    nombre: nombre,
-                    precio: precio,
-                    cantidad: 1
-                });
+                carrito.push({ nombre: nombre, precio: precio, cantidad: 1 });
             }
             
-            // Actualizar vista
             actualizarCarrito();
-            
-       
-       
+            guardarCarrito();
+            mostrarToast(`¡${nombre} agregado! 🛒`, 'success');
         }
 
-        // Actualizar contenido del carrito
+        function reducirCantidad(index) {
+            if (carrito[index].cantidad > 1) {
+                carrito[index].cantidad -= 1;
+            } else {
+                carrito.splice(index, 1);
+            }
+            actualizarCarrito();
+            guardarCarrito();
+        }
+
         function actualizarCarrito() {
-            // Actualizar contador
             let totalProductos = 0;
             let totalPrecio = 0;
+            let precioOriginal = 0;
 
             carrito.forEach(item => {
                 totalProductos += item.cantidad;
-                totalPrecio += item.precio * item.cantidad;
+                const subtotal = item.precio * item.cantidad;
+                totalPrecio += subtotal;
+                precioOriginal += subtotal;
             });
+
+            // Aplicar descuento
+            if (descuentoActivo > 0) {
+                const descuento = totalPrecio * (descuentoActivo / 100);
+                totalPrecio -= descuento;
+                
+                document.getElementById('infoDescuento').classList.remove('hidden');
+                document.getElementById('porcentajeDescuento').textContent = descuentoActivo + '%';
+                document.getElementById('precioOriginal').textContent = precioOriginal.toFixed(2);
+            } else {
+                document.getElementById('infoDescuento').classList.add('hidden');
+            }
 
             contadorElemento.textContent = totalProductos;
 
-            // Actualizar lista de productos
             if (carrito.length === 0) {
                 listaCarritoElemento.innerHTML = `<p class="text-center text-gray-500 mt-10 text-lg">Tu carrito está vacío 😔</p>`;
             } else {
                 let html = '';
                 carrito.forEach((item, index) => {
+                    const subtotal = item.precio * item.cantidad;
+                    const precioTexto = item.precio === 0 ? 'Consultar' : `S/ ${subtotal.toFixed(2)}`;
+                    
                     html += `
-                        <div class="flex justify-between items-center py-3 border-b border-rosaKawaii/30">
-                            <div>
+                        <div class="flex justify-between items-center py-3 border-b border-rosaKawaii/30 animar-entrada">
+                            <div class="flex-1">
                                 <p class="font-kawaii text-lg text-textoKawaii">${item.nombre}</p>
-                                <p class="font-cuerpo text-sm text-gray-500">Cantidad: ${item.cantidad}</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <button onclick="reducirCantidad(${index})" class="w-7 h-7 rounded-full bg-rosaKawaii/30 text-textoKawaii font-bold hover:bg-rosaKawaii/50 transition">-</button>
+                                    <span class="font-cuerpo text-sm text-gray-500">Cantidad: ${item.cantidad}</span>
+                                    <button onclick="agregarAlCarrito('${item.nombre}', ${item.precio})" class="w-7 h-7 rounded-full bg-rosaKawaii/30 text-textoKawaii font-bold hover:bg-rosaKawaii/50 transition">+</button>
+                                </div>
                             </div>
-                            <div class="text-right">
-                                <p class="font-kawaii text-lg text-rosaKawaii">S/ ${(item.precio * item.cantidad).toFixed(2)}</p>
+                            <div class="text-right ml-3">
+                                <p class="font-kawaii text-lg text-rosaKawaii">${precioTexto}</p>
                                 <button onclick="eliminarProducto(${index})" class="text-sm text-red-400 hover:text-red-600 mt-1">
-                                    Eliminar
+                                    <i class="fa fa-trash"></i> Eliminar
                                 </button>
                             </div>
                         </div>
@@ -983,153 +1702,204 @@
                 listaCarritoElemento.innerHTML = html;
             }
 
-            // Actualizar total
             totalCarritoElemento.textContent = `S/ ${totalPrecio.toFixed(2)}`;
         }
 
-        // Eliminar producto específico
         function eliminarProducto(indice) {
+            const nombre = carrito[indice].nombre;
             carrito.splice(indice, 1);
             actualizarCarrito();
+            guardarCarrito();
+            mostrarToast(`${nombre} eliminado`, 'info');
         }
-function enviarWhatsApp() {
 
-    if (carrito.length === 0) {
-        alert("Tu carrito está vacío 😔");
-        return;
-    }
-
-    let mensaje = "🍡 *PEDIDO MAGIC JELLY CAKE* 🍡%0A%0A";
-    let total = 0;
-
-    carrito.forEach(item => {
-        let subtotal = item.precio * item.cantidad;
-        total += subtotal;
-
-        mensaje += `✨ ${item.nombre}%0A`;
-        mensaje += `Cantidad: ${item.cantidad}%0A`;
-        mensaje += `Subtotal: S/ ${subtotal.toFixed(2)}%0A%0A`;
-    });
-
-    mensaje += `💰 *TOTAL: S/ ${total.toFixed(2)}*`;
-
-    window.open(
-        `https://wa.me/51934493012?text=${mensaje}`,
-        '_blank'
-    );
-}
-        // Vaciar todo el carrito
         function vaciarCarrito() {
-            carrito = [];
-            actualizarCarrito();
+            if (carrito.length === 0) return;
+            if (confirm('¿Estás segura de vaciar el carrito? 🥺')) {
+                carrito = [];
+                descuentoActivo = 0;
+                cuponAplicado = '';
+                document.getElementById('inputCupon').value = '';
+                document.getElementById('inputCupon').classList.remove('cupon-aplicado');
+                document.getElementById('inputCupon').disabled = false;
+                document.getElementById('mensajeCupon').textContent = '';
+                actualizarCarrito();
+                guardarCarrito();
+                mostrarToast('Carrito vaciado', 'info');
+            }
         }
+
+        // ==================== COPIAR PEDIDO ====================
+        function copiarPedido() {
+            if (carrito.length === 0) {
+                mostrarToast('El carrito está vacío 😔', 'error');
+                return;
+            }
+
+            let texto = "🍡 PEDIDO MAGIC JELLY CAKE 🍡\n\n";
+            let total = 0;
+
+            carrito.forEach(item => {
+                const subtotal = item.precio * item.cantidad;
+                total += subtotal;
+                texto += `✨ ${item.nombre}\n`;
+                texto += `   Cantidad: ${item.cantidad}\n`;
+                texto += `   ${item.precio === 0 ? 'Precio: A consultar' : 'Subtotal: S/ ' + subtotal.toFixed(2)}\n\n`;
+            });
+
+            if (descuentoActivo > 0) {
+                const descuento = total * (descuentoActivo / 100);
+                texto += `🎁 Descuento (${descuentoActivo}%): -S/ ${descuento.toFixed(2)}\n`;
+                total -= descuento;
+            }
+
+            texto += `\n💰 TOTAL: S/ ${total.toFixed(2)}`;
+            texto += `\n\n¡Gracias por elegir Magic Jelly Cake! ✨`;
+
+            navigator.clipboard.writeText(texto).then(() => {
+                mostrarToast('¡Pedido copiado al portapapeles! 📋', 'success');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = texto;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                mostrarToast('¡Pedido copiado al portapapeles! 📋', 'success');
+            });
+        }
+
+        // ==================== WHATSAPP ====================
+        function enviarWhatsApp() {
+            if (carrito.length === 0) {
+                mostrarToast('Tu carrito está vacío 😔', 'error');
+                return;
+            }
+
+            let mensaje = "🍡 *PEDIDO MAGIC JELLY CAKE* 🍡%0A%0A";
+            let total = 0;
+
+            carrito.forEach(item => {
+                let subtotal = item.precio * item.cantidad;
+                total += subtotal;
+                mensaje += `✨ ${item.nombre}%0A`;
+                mensaje += `Cantidad: ${item.cantidad}%0A`;
+                mensaje += item.precio === 0 ? `Precio: A consultar%0A%0A` : `Subtotal: S/ ${subtotal.toFixed(2)}%0A%0A`;
+            });
+
+            if (descuentoActivo > 0) {
+                const descuento = total * (descuentoActivo / 100);
+                mensaje += `🎁 *Descuento aplicado: ${descuentoActivo}%*%0A`;
+                total -= descuento;
+            }
+
+            mensaje += `💰 *TOTAL: S/ ${total.toFixed(2)}*`;
+
+            lanzarConfeti();
+            mostrarToast('¡Gracias por tu compra! 🎉', 'success');
+            
+            setTimeout(() => {
+                window.open(`https://wa.me/51934493012?text=${mensaje}`, '_blank');
+            }, 800);
+        }
+
+        // ==================== RESEÑAS LOCALES ====================
+        let resenas = [
+            { nombre: "María G.", estrellas: 5, comentario: "¡Las gelatinas más hermosas que he visto! El sabor es increíble 🥰", fecha: "2026-06-15" },
+            { nombre: "Andrea R.", estrellas: 5, comentario: "Pedí para un baby shower y todos quedaron encantados. 100% recomendado 💕", fecha: "2026-06-10" },
+            { nombre: "Sofía L.", estrellas: 4, comentario: "Muy lindos diseños y el empaque es divino. Volveré a comprar ✨", fecha: "2026-06-05" }
+        ];
+
+        function enviarResena() {
+            const nombre = document.getElementById("nombre").value.trim();
+            const estrellas = parseInt(document.getElementById("estrellas").value);
+            const comentario = document.getElementById("comentario").value.trim();
+
+            if (!nombre || !comentario) {
+                mostrarToast('Completa todos los campos ❌', 'error');
+                return;
+            }
+
+            const nuevaResena = {
+                nombre: nombre,
+                estrellas: estrellas,
+                comentario: comentario,
+                fecha: new Date().toISOString().split('T')[0]
+            };
+
+            resenas.unshift(nuevaResena);
+            guardarResenas();
+            
+            document.getElementById("nombre").value = "";
+            document.getElementById("comentario").value = "";
+            document.getElementById("estrellas").value = "5";
+            
+            mostrarToast('¡Opinión enviada con éxito! ⭐', 'success');
+            renderizarResenas();
+        }
+
+        function renderizarResenas() {
+            totalResenas = resenas.length;
+            const container = document.getElementById("listaResenas");
+            
+            let html = "";
+            resenas.forEach((item, index) => {
+                html += `
+                    <div class="resena ${index >= 3 ? 'oculta' : ''}">
+                        <div class="flex justify-between items-start">
+                            <h4>${item.nombre}</h4>
+                            <span class="text-sm text-gray-400">${item.fecha}</span>
+                        </div>
+                        <div class="estrellas">${"⭐".repeat(item.estrellas)}</div>
+                        <p>${item.comentario}</p>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            
+            const btn = document.getElementById("btnMasResenas");
+            if (totalResenas <= 3) {
+                btn.style.display = "none";
+            } else {
+                btn.style.display = "block";
+                btn.innerHTML = mostrandoTodas ? "Ver menos ▲" : "Ver más opiniones ▼";
+            }
+        }
+
+        function toggleResenas() {
+            const resenasElems = document.querySelectorAll(".resena");
+            const btn = document.getElementById("btnMasResenas");
+
+            if (!mostrandoTodas) {
+                resenasElems.forEach((r, index) => {
+                    if (index >= 3) r.style.display = "block";
+                });
+                btn.innerHTML = "Ver menos ▲";
+                mostrandoTodas = true;
+            } else {
+                resenasElems.forEach((r, index) => {
+                    if (index >= 3) r.style.display = "none";
+                });
+                btn.innerHTML = "Ver más opiniones ▼";
+                mostrandoTodas = false;
+            }
+        }
+
+        // ==================== INICIALIZACIÓN ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarCarrito();
+            cargarFavoritos();
+            cargarModoOscuro();
+            cargarResenasGuardadas();
+            renderizarResenas();
+
+            document.addEventListener('click', (e) => {
+                if (!carritoPanel.contains(e.target) && !btnCarrito.contains(e.target) && !carritoPanel.classList.contains('translate-x-full')) {
+                    cerrarCarrito();
+                }
+            });
+        });
     </script>
-    <script>
-const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbwFkTbxbgITH_K25izp6Erlk3oFBH7tIlCYQeVxxldY5yZeNd9w6U9kg7hxuee1Tztr/exec";
-
-async function enviarResena() {
-
-    const datos = {
-        nombre: document.getElementById("nombre").value,
-        estrellas: document.getElementById("estrellas").value,
-        comentario: document.getElementById("comentario").value
-    };
-
-    if(!datos.nombre || !datos.comentario){
-        document.getElementById("mensaje").innerHTML = "❌ Completa los campos";
-        return;
-    }
-
-    try {
-        await fetch(URL_SCRIPT, {
-            method: "POST",
-            body: JSON.stringify(datos)
-        });
-
-        document.getElementById("mensaje").innerHTML =
-        "✅ Opinión enviada correctamente";
-
-        document.getElementById("nombre").value = "";
-        document.getElementById("comentario").value = "";
-        cargarResenas();
-
-    } catch(error) {
-        document.getElementById("mensaje").innerHTML =
-        "❌ Error al enviar";
-    }
-}
-async function cargarResenas() {
-
-    try {
-
-        const respuesta = await fetch(URL_SCRIPT);
-        const datos = await respuesta.json();
-
-        totalResenas = datos.length;
-
-        let html = "";
-
-        datos.reverse().forEach((item,index) => {
-
-            html += `
-            <div class="resena"
-                 style="${index >= 3 ? 'display:none' : ''}">
-
-                <h4>${item.nombre}</h4>
-
-                <div class="estrellas">
-                    ${"⭐".repeat(item.estrellas)}
-                </div>
-
-                <p>${item.comentario}</p>
-
-            </div>
-            `;
-        });
-
-        document.getElementById("listaResenas").innerHTML = html;
-
-        if(totalResenas <= 3){
-            document.getElementById("btnMasResenas").style.display = "none";
-        }
-
-    } catch(error) {
-        console.error(error);
-    }
-}
-function toggleResenas(){
-
-    const resenas = document.querySelectorAll(".resena");
-    const btn = document.getElementById("btnMasResenas");
-
-    if(!mostrandoTodas){
-
-        resenas.forEach((r,index)=>{
-            if(index >= 3){
-                r.style.display = "block";
-            }
-        });
-
-        btn.innerHTML = "Ver menos ▲";
-        mostrandoTodas = true;
-
-    }else{
-
-        resenas.forEach((r,index)=>{
-            if(index >= 3){
-                r.style.display = "none";
-            }
-        });
-
-        btn.innerHTML = "Ver más opiniones ▼";
-        mostrandoTodas = false;
-    }
-}
-let mostrandoTodas = false;
-let totalResenas = 0;
-cargarResenas();
-</script>
-    
-
 </body>
 </html>
