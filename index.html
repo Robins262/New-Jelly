@@ -30,6 +30,10 @@
                         honeyDark: '#F5C77E',
                         chocolate: '#5A3E36',
                         chocolateLight: '#8B6B5F',
+                        matcha: '#A8D5BA',
+                        matchaDark: '#6B9E7C',
+                        coffee: '#C4A882',
+                        coffeeDark: '#8B7355',
                     },
                     fontFamily: {
                         display: ['Pacifico', 'cursive'],
@@ -87,11 +91,16 @@
             0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 143, 163, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(255, 143, 163, 0); }
+        }
 
         .animate-float { animation: float 3s ease-in-out infinite; }
         .animate-float-slow { animation: floatSlow 4s ease-in-out infinite; }
         .animate-fade-up { animation: fadeInUp 0.8s ease forwards; }
         .animate-scale-in { animation: scaleIn 0.6s ease forwards; }
+        .animate-pulse-glow { animation: pulse-glow 2s infinite; }
 
         /* ===== HERO BLOBS ===== */
         .blob-bg {
@@ -445,6 +454,36 @@
             transform: translateY(0);
         }
 
+        /* ===== FLAVOR CARDS ===== */
+        .flavor-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .flavor-card:hover {
+            transform: translateY(-5px);
+            border-color: #FFD6E0;
+            box-shadow: 0 10px 30px rgba(90, 62, 54, 0.08);
+        }
+        .flavor-card.active {
+            border-color: #FF8FA3;
+            background: #FFF8F5;
+        }
+        .flavor-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 12px;
+        }
+
         /* ===== DARK MODE ===== */
         body.dark-mode {
             background: #2D1F2D;
@@ -459,6 +498,23 @@
         body.dark-mode .chat-msg.bot { background: #4D3D4D; color: #F0E0F0; }
         body.dark-mode .text-chocolate { color: #F0E0F0 !important; }
         body.dark-mode .text-chocolateLight { color: #B0A0B0 !important; }
+        body.dark-mode .flavor-card { background: #3D2D3D; }
+        body.dark-mode .flavor-card.active { background: #4D3D4D; }
+
+        /* ===== BADGE NEW ===== */
+        .badge-new {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: linear-gradient(135deg, #FF8FA3, #E85A7A);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 10;
+            animation: pulse-glow 2s infinite;
+        }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
@@ -557,6 +613,7 @@
             <div class="hidden md:flex items-center gap-8 font-semibold text-sm">
                 <a href="#inicio" class="hover:text-roseDark transition">Inicio</a>
                 <a href="#productos" class="hover:text-roseDark transition">Productos</a>
+                <a href="#sabores" class="hover:text-roseDark transition">Sabores</a>
                 <a href="#nosotros" class="hover:text-roseDark transition">Nosotros</a>
                 <a href="#personalizado" class="hover:text-roseDark transition">Personalizado</a>
                 <a href="#contacto" class="hover:text-roseDark transition">Contacto</a>
@@ -580,6 +637,7 @@
         <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-4xl">&times;</button>
         <a href="#inicio" onclick="toggleMobileMenu()">Inicio</a>
         <a href="#productos" onclick="toggleMobileMenu()">Productos</a>
+        <a href="#sabores" onclick="toggleMobileMenu()">Sabores</a>
         <a href="#nosotros" onclick="toggleMobileMenu()">Nosotros</a>
         <a href="#personalizado" onclick="toggleMobileMenu()">Personalizado</a>
         <a href="#contacto" onclick="toggleMobileMenu()">Contacto</a>
@@ -600,19 +658,19 @@
                     Dulzura que <br><span class="text-roseDark">se ve</span> y se siente
                 </h1>
                 <p class="text-lg text-chocolateLight mb-8 max-w-md mx-auto md:mx-0 leading-relaxed">
-                    Creaciones artesanales en 3D con diseños kawaii, flores encapsuladas y sabores irresistibles. Hechas con amor en Lima.
+                    Creaciones artesanales en 3D con diseños kawaii, flores encapsuladas y sabores irresistibles. Hechas con amor en Lima. ¡Ahora con 12 sabores nuevos!
                 </p>
                 <div class="flex flex-wrap gap-4 justify-center md:justify-start">
                     <a href="#productos" class="btn-primary">
                         <i class="fa fa-heart"></i> Ver productos
                     </a>
-                    <a href="#personalizado" class="btn-secondary">
-                        <i class="fa fa-magic"></i> Personalizar
+                    <a href="#sabores" class="btn-secondary">
+                        <i class="fa fa-star"></i> Nuevos sabores
                     </a>
                 </div>
                 <div class="flex gap-8 mt-10 justify-center md:justify-start">
                     <div class="text-center">
-                        <div class="font-display text-3xl text-roseDark">150+</div>
+                        <div class="font-display text-3xl text-roseDark">200+</div>
                         <div class="text-sm text-chocolateLight">Pedidos</div>
                     </div>
                     <div class="text-center">
@@ -620,8 +678,8 @@
                         <div class="text-sm text-chocolateLight">Valoración</div>
                     </div>
                     <div class="text-center">
-                        <div class="font-display text-3xl text-mintDark">100%</div>
-                        <div class="text-sm text-chocolateLight">Artesanal</div>
+                        <div class="font-display text-3xl text-mintDark">12</div>
+                        <div class="text-sm text-chocolateLight">Sabores</div>
                     </div>
                 </div>
             </div>
@@ -640,6 +698,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="absolute -top-4 -left-4 bg-white rounded-2xl p-3 shadow-lg animate-float" style="animation-delay: 1s;">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-honey rounded-full flex items-center justify-center text-honeyDark text-lg">🍓</div>
+                        <div>
+                            <div class="font-bold text-xs">12 Sabores</div>
+                            <div class="text-xs text-chocolateLight">Nuevos!</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -652,39 +719,50 @@
                 <h2 class="font-display text-4xl md:text-5xl text-chocolate mt-2">Nuestras categorías</h2>
                 <div class="section-divider"></div>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div class="card text-center cursor-pointer group reveal" onclick="scrollToCategory('boxmini')">
-                    <div class="w-16 h-16 bg-blush rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">🍡</div>
-                    <h3 class="font-bold text-lg mb-1">Box Mini</h3>
-                    <p class="text-sm text-chocolateLight">Regalos pequeños</p>
+                    <div class="w-14 h-14 bg-blush rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition">🍡</div>
+                    <h3 class="font-bold text-sm mb-1">Box Mini</h3>
+                    <p class="text-xs text-chocolateLight">Regalos pequeños</p>
                 </div>
                 <div class="card text-center cursor-pointer group reveal" onclick="scrollToCategory('pequeno')">
-                    <div class="w-16 h-16 bg-lilac rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">🧁</div>
-                    <h3 class="font-bold text-lg mb-1">Pequeño</h3>
-                    <p class="text-sm text-chocolateLight">Porciones individuales</p>
+                    <div class="w-14 h-14 bg-lilac rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition">🧁</div>
+                    <h3 class="font-bold text-sm mb-1">Pequeño</h3>
+                    <p class="text-xs text-chocolateLight">Porciones individuales</p>
                 </div>
                 <div class="card text-center cursor-pointer group reveal" onclick="scrollToCategory('mediano')">
-                    <div class="w-16 h-16 bg-sky rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">🎂</div>
-                    <h3 class="font-bold text-lg mb-1">Mediano</h3>
-                    <p class="text-sm text-chocolateLight">Para compartir</p>
+                    <div class="w-14 h-14 bg-sky rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition">🎂</div>
+                    <h3 class="font-bold text-sm mb-1">Mediano</h3>
+                    <p class="text-xs text-chocolateLight">Para compartir</p>
                 </div>
                 <div class="card text-center cursor-pointer group reveal" onclick="scrollToCategory('grande')">
-                    <div class="w-16 h-16 bg-honey rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition">🍰</div>
-                    <h3 class="font-bold text-lg mb-1">Grande</h3>
-                    <p class="text-sm text-chocolateLight">Fiestas y eventos</p>
+                    <div class="w-14 h-14 bg-honey rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition">🍰</div>
+                    <h3 class="font-bold text-sm mb-1">Grande</h3>
+                    <p class="text-xs text-chocolateLight">Fiestas y eventos</p>
+                </div>
+                <div class="card text-center cursor-pointer group reveal" onclick="scrollToCategory('tematica')">
+                    <div class="w-14 h-14 bg-mint rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition">🎨</div>
+                    <h3 class="font-bold text-sm mb-1">Temática</h3>
+                    <p class="text-xs text-chocolateLight">Diseños especiales</p>
+                </div>
+                <div class="card text-center cursor-pointer group reveal" onclick="scrollToCategory('especial')">
+                    <div class="w-14 h-14 bg-rose/20 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition">✨</div>
+                    <h3 class="font-bold text-sm mb-1">Edición Especial</h3>
+                    <p class="text-xs text-chocolateLight">Novedades</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ===== PRODUCTS ===== -->
+    
+<!-- ===== PRODUCTS ===== -->
     <section id="productos" class="py-20 px-6 bg-white/50">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16 reveal">
-                <span class="text-roseDark font-bold text-sm tracking-widest uppercase">Catálogo</span>
+                <span class="text-roseDark font-bold text-sm tracking-widest uppercase">Catálogo 2026</span>
                 <h2 class="font-display text-4xl md:text-5xl text-chocolate mt-2">Nuestros productos</h2>
                 <div class="section-divider"></div>
-                <p class="text-chocolateLight max-w-xl mx-auto mt-4">Cada gelatina es una obra de arte comestible, hecha a mano con los mejores ingredientes.</p>
+                <p class="text-chocolateLight max-w-xl mx-auto mt-4">Cada gelatina es una obra de arte comestible, hecha a mano con los mejores ingredientes. Ahora con más variedad y sabores.</p>
             </div>
 
             <!-- BOX MINI -->
@@ -697,7 +775,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Box Cumpleañero</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 flor • 100g • Muy tierna</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 flor • 100g • Muy tierna</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Mango</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">Consultar</span>
                             <button onclick="addToCart('Box Cumpleañero', 0)" class="btn-primary text-sm py-2 px-4">
@@ -713,7 +795,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Box Tropical</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 flor • 100g • Muy tierna</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 flor • 100g • Muy tierna</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Piña</span>
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Maracuyá</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">Consultar</span>
                             <button onclick="addToCart('Box Tropical', 0)" class="btn-primary text-sm py-2 px-4">
@@ -729,10 +815,77 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Box Mini Rosas</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 flor • 100g • Muy tierna</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 flor • 100g • Muy tierna</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-rose/20 px-2 py-1 rounded-full">Frutos Rojos</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">Consultar</span>
                             <button onclick="addToCart('Box Mini Rosas', 0)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Box Kawaii Osito')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(24)">
+                        <img src="https://i.pinimg.com/736x/25/aa/7f/25aa7fe6bf760275f896243fa5370c83.jpg" class="product-img" alt="Box Kawaii Osito">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Box Kawaii Osito</h4>
+                        <p class="text-chocolateLight text-sm mb-2">1 figura • 120g • Ultra tierno</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Vainilla</span>
+                            <span class="text-xs bg-coffee/30 px-2 py-1 rounded-full">Café</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 18.00</span>
+                            <button onclick="addToCart('Box Kawaii Osito', 18)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Box Mini Corazón')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(36)">
+                        <img src="https://i.pinimg.com/736x/42/5c/b7/425cb7935d182fef6b3246beaec8da93.jpg" class="product-img" alt="Box Mini Corazón">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Box Mini Corazón</h4>
+                        <p class="text-chocolateLight text-sm mb-2">1 corazón • 100g • Perfecto para regalar</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-rose/20 px-2 py-1 rounded-full">Cereza</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 20.00</span>
+                            <button onclick="addToCart('Box Mini Corazón', 20)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Box Mini Margarita')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(37)">
+                        <img src="https://i.pinimg.com/736x/a5/99/c9/a599c98aa931ff286cf6cafe4ad4536b.jpg" class="product-img" alt="Box Mini Margarita">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Box Mini Margarita</h4>
+                        <p class="text-chocolateLight text-sm mb-2">1 margarita • 100g • Fresca y delicada</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Limón</span>
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Piña</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 20.00</span>
+                            <button onclick="addToCart('Box Mini Margarita', 20)" class="btn-primary text-sm py-2 px-4">
                                 <i class="fa fa-plus"></i> Agregar
                             </button>
                         </div>
@@ -750,7 +903,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Rosa Naranja</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 Gelatina • 100g</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 Gelatina • 100g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Naranja</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 25.00</span>
                             <button onclick="addToCart('Rosa Naranja', 25)" class="btn-primary text-sm py-2 px-4">
@@ -766,7 +923,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Rosa Rosada</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 Gelatina • 100g</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 Gelatina • 100g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-rose/20 px-2 py-1 rounded-full">Frambuesa</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 30.00</span>
                             <button onclick="addToCart('Rosa Rosada', 30)" class="btn-primary text-sm py-2 px-4">
@@ -782,7 +943,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Rosa Lila</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 Gelatina • 100g</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 Gelatina • 100g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 30.00</span>
                             <button onclick="addToCart('Rosa Lila', 30)" class="btn-primary text-sm py-2 px-4">
@@ -798,7 +963,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Corazón Cereza</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 Gelatina • 100g</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 Gelatina • 100g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-rose/20 px-2 py-1 rounded-full">Cereza</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 30.00</span>
                             <button onclick="addToCart('Corazón Cereza', 30)" class="btn-primary text-sm py-2 px-4">
@@ -810,11 +979,15 @@
                 <div class="card-product reveal">
                     <button class="btn-fav" onclick="toggleFav(this, 'Margarita')">🤍</button>
                     <div class="overflow-hidden cursor-pointer" onclick="openLightbox(12)">
-                        <img src="https://i.pinimg.com/736x/a5/99/c9/a599c98aa931ff286cf6cafe4ad4536b.jpg" class="product-img" alt="Margarita">
+                        <img src="https://i.pinimg.com/1200x/35/9d/53/359d5327d2a784c122f093bd93a3cee6.jpg" class="product-img" alt="Margarita">
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Margarita</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 Gelatina • 100g</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 Gelatina • 100g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Limón</span>
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Piña</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 30.00</span>
                             <button onclick="addToCart('Margarita', 30)" class="btn-primary text-sm py-2 px-4">
@@ -830,7 +1003,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Pétalos</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 Gelatina • 100g</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 Gelatina • 100g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 30.00</span>
                             <button onclick="addToCart('Pétalos', 30)" class="btn-primary text-sm py-2 px-4">
@@ -839,6 +1016,71 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Sol Maracuyá')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(25)">
+                        <img src="https://i.pinimg.com/1200x/f4/e7/7d/f4e77d669bfbdc929ca560fd1fd45248.jpg" class="product-img" alt="Sol Maracuyá">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Sol Maracuyá</h4>
+                        <p class="text-chocolateLight text-sm mb-2">1 Gelatina • 120g • Nuevo sabor!</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Maracuyá</span>
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Limón</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 32.00</span>
+                            <button onclick="addToCart('Sol Maracuyá', 32)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Coco Tropical')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(26)">
+                        <img src="https://i.pinimg.com/1200x/11/0a/02/110a028167655319e3fca1aba7bd6fda.jpg" class="product-img" alt="Coco Tropical">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Coco Tropical</h4>
+                        <p class="text-chocolateLight text-sm mb-2">1 Gelatina • 120g • Nuevo sabor!</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Coco</span>
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Piña</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 32.00</span>
+                            <button onclick="addToCart('Coco Tropical', 32)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Pequeño Lychee')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(38)">
+                        <img src="https://i.pinimg.com/736x/cd/67/e7/cd67e7d12b8aa761e26b37bd3ef89e5c.jpg" class="product-img" alt="Pequeño Lychee">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Pequeño Lychee</h4>
+                        <p class="text-chocolateLight text-sm mb-2">1 Gelatina • 110g • Exótico</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-sky/50 px-2 py-1 rounded-full">Lychee</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 35.00</span>
+                            <button onclick="addToCart('Pequeño Lychee', 35)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                
             </div>
 
             <!-- MEDIANO -->
@@ -851,7 +1093,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Mediano Flor</h4>
-                        <p class="text-chocolateLight text-sm mb-3">1 flor • 250g</p>
+                        <p class="text-chocolateLight text-sm mb-2">1 flor • 250g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 45.00</span>
                             <button onclick="addToCart('Mediano Flor', 45)" class="btn-primary text-sm py-2 px-4">
@@ -867,7 +1113,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Pasión Mediano</h4>
-                        <p class="text-chocolateLight text-sm mb-3">Varias flores • 250g</p>
+                        <p class="text-chocolateLight text-sm mb-2">Varias flores • 250g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Maracuyá</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 40.00</span>
                             <button onclick="addToCart('Pasión Mediano', 40)" class="btn-primary text-sm py-2 px-4">
@@ -883,10 +1133,79 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Mix Flores</h4>
-                        <p class="text-chocolateLight text-sm mb-3">Diseño completo • 250g</p>
+                        <p class="text-chocolateLight text-sm mb-2">Diseño completo • 250g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Limón</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 50.00</span>
                             <button onclick="addToCart('Mix Flores', 50)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Jardín Encantado')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(27)">
+                        <img src="https://kimi-web-img.moonshot.cn/img/d34zicoa2zcr2f.cloudfront.net/659741de577f2d711d3a13aab9be950749422f43.jpg" class="product-img" alt="Jardín Encantado">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Jardín Encantado</h4>
+                        <p class="text-chocolateLight text-sm mb-2">Múltiples flores • 300g • Edición limitada</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-matcha/40 px-2 py-1 rounded-full">Matcha</span>
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 55.00</span>
+                            <button onclick="addToCart('Jardín Encantado', 55)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Mediano Rosas Rojas')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(41)">
+                        <img src="https://i.pinimg.com/736x/3c/d9/de/3cd9de1e5acd1368dc86e8f0d5ad711c.jpg" class="product-img" alt="Mediano Rosas Rojas">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Mediano Rosas Rojas</h4>
+                        <p class="text-chocolateLight text-sm mb-2">2 rosas • 280g • Romántico</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-rose/20 px-2 py-1 rounded-full">Cereza</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 48.00</span>
+                            <button onclick="addToCart('Mediano Rosas Rojas', 48)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Mediano Cielo Azul')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(42)">
+                        <img src="https://i.pinimg.com/736x/e1/7c/2c/e17c2c8b8a040c3b8f43e4dbefd6c17f.jpg" class="product-img" alt="Mediano Cielo Azul">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Mediano Cielo Azul</h4>
+                        <p class="text-chocolateLight text-sm mb-2">Flores azules • 280g • Serenidad</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-sky/50 px-2 py-1 rounded-full">Lychee</span>
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 48.00</span>
+                            <button onclick="addToCart('Mediano Cielo Azul', 48)" class="btn-primary text-sm py-2 px-4">
                                 <i class="fa fa-plus"></i> Agregar
                             </button>
                         </div>
@@ -900,11 +1219,15 @@
                 <div class="card-product reveal">
                     <button class="btn-fav" onclick="toggleFav(this, 'Grande Fresas')">🤍</button>
                     <div class="overflow-hidden cursor-pointer" onclick="openLightbox(17)">
-                        <img src="https://i.pinimg.com/736x/f7/3a/9d/f73a9d1a011c813b7e42fe5ed4985602.jpg" class="product-img" alt="Grande Fresas">
+                        <img src="https://i.pinimg.com/736x/ac/86/b6/ac86b6c9b0a816f3dcc2d89e5aa8d60a.jpg" class="product-img" alt="Grande Fresas">
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Grande Fresas</h4>
-                        <p class="text-chocolateLight text-sm mb-3">500g • Rodeado de Fresas</p>
+                        <p class="text-chocolateLight text-sm mb-2">500g • Rodeado de Fresas</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-rose/20 px-2 py-1 rounded-full">Frambuesa</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 70.00</span>
                             <button onclick="addToCart('Grande Fresas', 70)" class="btn-primary text-sm py-2 px-4">
@@ -920,10 +1243,101 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Grande Margarita</h4>
-                        <p class="text-chocolateLight text-sm mb-3">500g • Con margarita</p>
+                        <p class="text-chocolateLight text-sm mb-2">500g • Con margarita</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Limón</span>
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Piña</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 75.00</span>
                             <button onclick="addToCart('Grande Margarita', 75)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Grande Koi')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(28)">
+                        <img src="https://kimi-web-img.moonshot.cn/img/static.boredpanda.com/e67901f2ad26161f4a520fbd062b821d1e89f5c7.jpg" class="product-img" alt="Grande Koi">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Grande Koi</h4>
+                        <p class="text-chocolateLight text-sm mb-2">500g • Peces Koi y flores • Edición especial</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-sky/50 px-2 py-1 rounded-full">Lychee</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Limón</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 85.00</span>
+                            <button onclick="addToCart('Grande Koi', 85)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Grande Lúcuma')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(29)">
+                        <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&h=400&fit=crop" class="product-img" alt="Grande Lúcuma">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Grande Lúcuma</h4>
+                        <p class="text-chocolateLight text-sm mb-2">500g • Sabor peruano • Nuevo!</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Lúcuma</span>
+                            <span class="text-xs bg-coffee/30 px-2 py-1 rounded-full">Café</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 80.00</span>
+                            <button onclick="addToCart('Grande Lúcuma', 80)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Grande Arcoíris')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(43)">
+                        <img src="https://i.pinimg.com/736x/ef/f7/03/eff703b36e9f04bfd98bd1e09b7e29fa.jpg" class="product-img" alt="Grande Arcoíris">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Grande Arcoíris</h4>
+                        <p class="text-chocolateLight text-sm mb-2">550g • Múltiples colores • Fiesta</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Limón</span>
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Piña</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 82.00</span>
+                            <button onclick="addToCart('Grande Arcoíris', 82)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Grande Vainilla Real')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(44)">
+                        <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&h=400&fit=crop" class="product-img" alt="Grande Vainilla Real">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Grande Vainilla Real</h4>
+                        <p class="text-chocolateLight text-sm mb-2">500g • Vainilla pura • Clásico elegante</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Vainilla</span>
+                            <span class="text-xs bg-coffee/30 px-2 py-1 rounded-full">Café</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 78.00</span>
+                            <button onclick="addToCart('Grande Vainilla Real', 78)" class="btn-primary text-sm py-2 px-4">
                                 <i class="fa fa-plus"></i> Agregar
                             </button>
                         </div>
@@ -941,7 +1355,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Temática Foto</h4>
-                        <p class="text-chocolateLight text-sm mb-3">Con foto personalizada • 250g</p>
+                        <p class="text-chocolateLight text-sm mb-2">Con foto personalizada • 250g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 65.00</span>
                             <button onclick="addToCart('Temática Foto', 65)" class="btn-primary text-sm py-2 px-4">
@@ -957,7 +1375,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Bear Pareja</h4>
-                        <p class="text-chocolateLight text-sm mb-3">Gelatina Bear • 250g</p>
+                        <p class="text-chocolateLight text-sm mb-2">Gelatina Bear • 250g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Vainilla</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 65.00</span>
                             <button onclick="addToCart('Bear Pareja', 65)" class="btn-primary text-sm py-2 px-4">
@@ -973,7 +1395,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Hello Kitty</h4>
-                        <p class="text-chocolateLight text-sm mb-3">Diseño completo • 500g</p>
+                        <p class="text-chocolateLight text-sm mb-2">Diseño completo • 500g</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-rose/20 px-2 py-1 rounded-full">Cereza</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 60.00</span>
                             <button onclick="addToCart('Hello Kitty', 60)" class="btn-primary text-sm py-2 px-4">
@@ -982,9 +1408,213 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Unicornio Mágico')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(30)">
+                        <img src="https://i.pinimg.com/736x/df/ed/bc/dfedbc153cc5d27ebdbcc8958957bf3a.jpg" class="product-img" alt="Unicornio Mágico">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Unicornio Mágico</h4>
+                        <p class="text-chocolateLight text-sm mb-2">Diseño unicornio • 350g • Arcoíris</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Vainilla</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 70.00</span>
+                            <button onclick="addToCart('Unicornio Mágico', 70)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Baby Shower')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(31)">
+                        <img src="https://i.pinimg.com/736x/d3/5f/17/d35f173e50767bfbac4124acf2f7b852.jpg" class="product-img" alt="Baby Shower">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Baby Shower</h4>
+                        <p class="text-chocolateLight text-sm mb-2">Diseño bebé • 400g • Personalizable</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-sky/50 px-2 py-1 rounded-full">Vainilla</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 75.00</span>
+                            <button onclick="addToCart('Baby Shower', 75)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Temática Boda')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(45)">
+                        <img src="https://i.pinimg.com/736x/9d/99/a5/9d99a56325b49e71b85591016a1ce3fc.jpg" class="product-img" alt="Temática Boda">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Temática Boda</h4>
+                        <p class="text-chocolateLight text-sm mb-2">Diseño elegante • 450g • Para novios</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Vainilla</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 88.00</span>
+                            <button onclick="addToCart('Temática Boda', 88)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Temática Graduación')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(46)">
+                        <img src="https://i.pinimg.com/736x/c1/f6/3d/c1f63d71d1d39ef913ac74c5d9af1cdf.jpg" class="product-img" alt="Temática Graduación">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Temática Graduación</h4>
+                        <p class="text-chocolateLight text-sm mb-2">Diseño birrete • 350g • Celebración</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-sky/50 px-2 py-1 rounded-full">Vainilla</span>
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Maracuyá</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 72.00</span>
+                            <button onclick="addToCart('Temática Graduación', 72)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Temática Dragon Ball')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(47)">
+                        <img src="https://i.pinimg.com/736x/71/bc/59/71bc592bf6b328596acf1945d9987f3c.jpg" class="product-img" alt="Temática Pokémon">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Temática Dragon Ball</h4>
+                        <p class="text-chocolateLight text-sm mb-2">Diseño Esferas • 350g • Fans</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Limón</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 68.00</span>
+                            <button onclick="addToCart('Temática Dragon Ball', 68)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Temática Cumpleaños 15')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(48)">
+                        <img src="https://i.pinimg.com/736x/e4/09/75/e40975fd187e65c5d080cf058fe7bdad.jpg" class="product-img" alt="Temática Cumpleaños 15">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Temática Cumpleaños 15</h4>
+                        <p class="text-chocolateLight text-sm mb-2">Diseño quinceañera • 500g • Especial</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                            <span class="text-xs bg-rose/20 px-2 py-1 rounded-full">Cereza</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 85.00</span>
+                            <button onclick="addToCart('Temática Cumpleaños 15', 85)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-                       <!-- SIN AZÚCAR -->
+           
+
+            <!-- EDICIÓN ESPECIAL -->
+            <h3 class="font-display text-3xl text-chocolate mb-8 text-center reveal" id="cat-especial">Edición Especial ✨</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                <!-- NUEVO: Edición Especial Rosas Dobles -->
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Rosas Dobles Premium')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(32)">
+                        <img src="https://kimi-web-img.moonshot.cn/img/cdn.shopify.com/4d9fd9edf56bdc200fa784be47c86ea7d56d7708.jpg" class="product-img" alt="Rosas Dobles Premium">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Rosas Dobles Premium</h4>
+                        <p class="text-chocolateLight text-sm mb-2">2 rosas grandes • 600g • Edición limitada</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-rose/20 px-2 py-1 rounded-full">Cereza</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 95.00</span>
+                            <button onclick="addToCart('Rosas Dobles Premium', 95)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- NUEVO: Edición Especial Floral Romance -->
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Floral Romance')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(33)">
+                        <img src="https://kimi-web-img.moonshot.cn/img/jellyshareme.com/5e8f3eabf1139f8f049e9474a64301f7a58590c9.jpg" class="product-img" alt="Floral Romance">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Floral Romance</h4>
+                        <p class="text-chocolateLight text-sm mb-2">Múltiples flores • 600g • Edición limitada</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-lilac/50 px-2 py-1 rounded-full">Uva</span>
+                            <span class="text-xs bg-blush/50 px-2 py-1 rounded-full">Fresa</span>
+                            <span class="text-xs bg-matcha/40 px-2 py-1 rounded-full">Matcha</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 100.00</span>
+                            <button onclick="addToCart('Floral Romance', 100)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- NUEVO: Edición Especial Chirimoya -->
+                <div class="card-product reveal">
+                    <span class="badge-new">NUEVO</span>
+                    <button class="btn-fav" onclick="toggleFav(this, 'Chirimoya Real')">🤍</button>
+                    <div class="overflow-hidden cursor-pointer" onclick="openLightbox(34)">
+                        <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=600&h=400&fit=crop" class="product-img" alt="Chirimoya Real">
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-xl mb-1">Chirimoya Real</h4>
+                        <p class="text-chocolateLight text-sm mb-2">500g • Sabor peruano exclusivo</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Chirimoya</span>
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Lúcuma</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-display text-2xl text-roseDark">S/ 85.00</span>
+                            <button onclick="addToCart('Chirimoya Real', 85)" class="btn-primary text-sm py-2 px-4">
+                                <i class="fa fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIN AZÚCAR -->
             <h3 class="font-display text-3xl text-chocolate mb-8 text-center reveal" id="cat-sinazucar">Sin Azúcar 🌿</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="card-product reveal">
@@ -994,7 +1624,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Gelatina de Mango</h4>
-                        <p class="text-chocolateLight text-sm mb-3">500g • Con frutas y frutos rojos</p>
+                        <p class="text-chocolateLight text-sm mb-2">500g • Con frutas y frutos rojos</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-honey/50 px-2 py-1 rounded-full">Mango</span>
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Sin azúcar</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 80.00</span>
                             <button onclick="addToCart('Gelatina de Mango', 80)" class="btn-primary text-sm py-2 px-4">
@@ -1010,7 +1644,11 @@
                     </div>
                     <div class="p-6">
                         <h4 class="font-bold text-xl mb-1">Mix de Frutas</h4>
-                        <p class="text-chocolateLight text-sm mb-3">500g • Sin azúcar añadida</p>
+                        <p class="text-chocolateLight text-sm mb-2">500g • Sin azúcar añadida</p>
+                        <div class="flex flex-wrap gap-1 mb-3">
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Mix frutas</span>
+                            <span class="text-xs bg-mint/50 px-2 py-1 rounded-full">Sin azúcar</span>
+                        </div>
                         <div class="flex justify-between items-center">
                             <span class="font-display text-2xl text-roseDark">S/ 75.00</span>
                             <button onclick="addToCart('Mix de Frutas', 75)" class="btn-primary text-sm py-2 px-4">
@@ -1019,6 +1657,87 @@
                         </div>
                     </div>
                 </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SABORES ===== -->
+    <section id="sabores" class="py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16 reveal">
+                <span class="text-roseDark font-bold text-sm tracking-widest uppercase">Nuevos</span>
+                <h2 class="font-display text-4xl md:text-5xl text-chocolate mt-2">Nuestros 12 Sabores</h2>
+                <div class="section-divider"></div>
+                <p class="text-chocolateLight max-w-xl mx-auto mt-4">Descubre nuestra nueva línea de sabores artesanales, desde los clásicos hasta los más exóticos.</p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-blush">🍓</div>
+                    <h4 class="font-bold text-sm">Fresa</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Clásico</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-honey">🥭</div>
+                    <h4 class="font-bold text-sm">Mango</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Tropical</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-mint">🍋</div>
+                    <h4 class="font-bold text-sm">Limón</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Refrescante</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-honey/70">🍍</div>
+                    <h4 class="font-bold text-sm">Piña</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Tropical</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-honey">🟡</div>
+                    <h4 class="font-bold text-sm">Maracuyá</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Nuevo ✨</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-lilac">🍇</div>
+                    <h4 class="font-bold text-sm">Uva</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Clásico</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-rose/20">🍒</div>
+                    <h4 class="font-bold text-sm">Cereza</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Intenso</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-matcha/40">🍵</div>
+                    <h4 class="font-bold text-sm">Té Matcha</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Nuevo ✨</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-coffee/30">☕</div>
+                    <h4 class="font-bold text-sm">Café</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Nuevo ✨</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-mint/50">🥥</div>
+                    <h4 class="font-bold text-sm">Coco</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Nuevo ✨</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-honey/70">🟠</div>
+                    <h4 class="font-bold text-sm">Lúcuma</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Peruano ✨</p>
+                </div>
+                <div class="flavor-card reveal" onclick="selectFlavor(this)">
+                    <div class="flavor-icon bg-mint/40">🌿</div>
+                    <h4 class="font-bold text-sm">Chirimoya</h4>
+                    <p class="text-xs text-chocolateLight mt-1">Peruano ✨</p>
+                </div>
+            </div>
+            <div class="text-center reveal">
+                <p class="text-chocolateLight text-sm mb-4">💡 Todos nuestros sabores están disponibles en versiones <strong>sin azúcar</strong> bajo pedido.</p>
+                <a href="#personalizado" class="btn-secondary inline-flex">
+                    <i class="fa fa-magic"></i> Crear combinación personalizada
+                </a>
             </div>
         </div>
     </section>
@@ -1041,7 +1760,7 @@
                         Magic Jelly Cake nació de la pasión por crear postres que no solo deleitan el paladar, sino que también enamoran a la vista. Cada gelatina 3D es una obra de arte comestible, elaborada con técnicas artesanales de inyección de flores encapsuladas.
                     </p>
                     <p class="text-chocolateLight leading-relaxed mb-6">
-                        Utilizamos ingredientes de la más alta calidad, gelatina sin sabor artificial y diseños 100% personalizables. Desde cumpleaños hasta baby showers, hacemos que cada celebración sea mágica.
+                        Utilizamos ingredientes de la más alta calidad, gelatina sin sabor artificial y diseños 100% personalizables. Ahora con <strong>12 sabores únicos</strong> incluyendo opciones peruanas como lúcuma y chirimoya, y exóticos como té matcha y café.
                     </p>
                     <div class="grid grid-cols-3 gap-4 mt-8">
                         <div class="text-center p-4 bg-white rounded-2xl shadow-sm">
@@ -1069,7 +1788,7 @@
                 <span class="text-roseDark font-bold text-sm tracking-widest uppercase">Crea tu diseño</span>
                 <h2 class="font-display text-4xl md:text-5xl text-chocolate mt-2">Gelatina personalizada</h2>
                 <div class="section-divider"></div>
-                <p class="text-chocolateLight max-w-xl mx-auto mt-4">Cuéntanos tu idea y la convertimos en una gelatina única y especial.</p>
+                <p class="text-chocolateLight max-w-xl mx-auto mt-4">Cuéntanos tu idea y la convertimos en una gelatina única y especial. ¡Ahora con 12 sabores para elegir!</p>
             </div>
             <div class="card p-8 md:p-12 reveal">
                 <form id="customForm" onsubmit="submitCustom(event)">
@@ -1083,14 +1802,35 @@
                             <input type="tel" id="customPhone" class="input-kawaii" placeholder="Ej: 934493012" required>
                         </div>
                     </div>
-                    <div class="mb-6">
-                        <label class="block font-bold mb-2 text-sm">Tamaño deseado</label>
-                        <select id="customSize" class="input-kawaii">
-                            <option value="Box Mini">Box Mini (100g)</option>
-                            <option value="Pequeño">Pequeño (100g)</option>
-                            <option value="Mediano">Mediano (250g)</option>
-                            <option value="Grande">Grande (500g)</option>
-                        </select>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block font-bold mb-2 text-sm">Tamaño deseado</label>
+                            <select id="customSize" class="input-kawaii">
+                                <option value="Box Mini">Box Mini (100g)</option>
+                                <option value="Pequeño">Pequeño (100g)</option>
+                                <option value="Mediano">Mediano (250g)</option>
+                                <option value="Grande">Grande (500g)</option>
+                                <option value="Edición Especial">Edición Especial (600g)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-2 text-sm">Sabor preferido</label>
+                            <select id="customFlavor" class="input-kawaii">
+                                <option value="Fresa">🍓 Fresa</option>
+                                <option value="Mango">🥭 Mango</option>
+                                <option value="Limón">🍋 Limón</option>
+                                <option value="Piña">🍍 Piña</option>
+                                <option value="Maracuyá">🟡 Maracuyá (Nuevo)</option>
+                                <option value="Uva">🍇 Uva</option>
+                                <option value="Cereza">🍒 Cereza</option>
+                                <option value="Té Matcha">🍵 Té Matcha (Nuevo)</option>
+                                <option value="Café">☕ Café (Nuevo)</option>
+                                <option value="Coco">🥥 Coco (Nuevo)</option>
+                                <option value="Lúcuma">🟠 Lúcuma (Nuevo)</option>
+                                <option value="Chirimoya">🌿 Chirimoya (Nuevo)</option>
+                                <option value="Mix">✨ Mix de sabores</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="mb-6">
                         <label class="block font-bold mb-2 text-sm">Describe tu diseño o temática</label>
@@ -1150,6 +1890,7 @@
                 <div class="flex gap-6 text-sm text-white/70">
                     <a href="#inicio" class="hover:text-white transition">Inicio</a>
                     <a href="#productos" class="hover:text-white transition">Productos</a>
+                    <a href="#sabores" class="hover:text-white transition">Sabores</a>
                     <a href="#nosotros" class="hover:text-white transition">Nosotros</a>
                     <a href="#personalizado" class="hover:text-white transition">Personalizado</a>
                     <a href="#contacto" class="hover:text-white transition">Contacto</a>
@@ -1167,7 +1908,7 @@
                 </div>
             </div>
             <div class="border-t border-white/10 mt-8 pt-8 text-center text-white/50 text-sm">
-                <p>© 2024 Magic Jelly Cake. Todos los derechos reservados. Hecho con 💕 en Lima, Perú.</p>
+                <p>© 2026 Magic Jelly Cake. Todos los derechos reservados. Hecho con 💕 en Lima, Perú.</p>
             </div>
         </div>
     </footer>
@@ -1195,7 +1936,20 @@
             { name: 'Bear Pareja', img: 'https://i.pinimg.com/736x/25/aa/7f/25aa7fe6bf760275f896243fa5370c83.jpg', price: 65 },
             { name: 'Hello Kitty', img: 'https://i.pinimg.com/736x/ba/d6/9f/bad69fbe8c2514575d4887b0c7e98b61.jpg', price: 60 },
             { name: 'Gelatina de Mango', img: 'https://i.pinimg.com/1200x/74/5f/d4/745fd41b15f6b773d078ea4c27e3c6c3.jpg', price: 80 },
-            { name: 'Mix de Frutas', img: 'https://i.pinimg.com/736x/12/09/ec/1209ec369c7e462ab0bf9b2e8e83127f.jpg', price: 75 },
+            { name: 'Mix de Frutas', img: 'https://i.pinimg.com/736x/12/09/ec/1209ec369c7e462ab0bf9b2e8e83127d.jpg', price: 75 },
+            // NUEVOS PRODUCTOS
+            { name: 'Box Kawaii Osito', img: 'https://i.pinimg.com/736x/25/aa/7f/25aa7fe6bf760275f896243fa5370c83.jpg', price: 18 },
+            { name: 'Sol Maracuyá', img: 'https://i.pinimg.com/736x/12/09/ec/1209ec369c7e462ab0bf9b2e8e83127d.jpg', price: 32 },
+            { name: 'Coco Tropical', img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop', price: 32 },
+            { name: 'Jardín Encantado', img: 'https://kimi-web-img.moonshot.cn/img/d34zicoa2zcr2f.cloudfront.net/659741de577f2d711d3a13aab9be950749422f43.jpg', price: 55 },
+            { name: 'Grande Koi', img: 'https://kimi-web-img.moonshot.cn/img/static.boredpanda.com/e67901f2ad26161f4a520fbd062b821d1e89f5c7.jpg', price: 85 },
+            { name: 'Grande Lúcuma', img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&h=400&fit=crop', price: 80 },
+            { name: 'Unicornio Mágico', img: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&h=400&fit=crop', price: 70 },
+            { name: 'Baby Shower', img: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=600&h=400&fit=crop', price: 75 },
+            { name: 'Rosas Dobles Premium', img: 'https://kimi-web-img.moonshot.cn/img/cdn.shopify.com/4d9fd9edf56bdc200fa784be47c86ea7d56d7708.jpg', price: 95 },
+            { name: 'Floral Romance', img: 'https://kimi-web-img.moonshot.cn/img/jellyshareme.com/5e8f3eabf1139f8f049e9474a64301f7a58590c9.jpg', price: 100 },
+            { name: 'Chirimoya Real', img: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=600&h=400&fit=crop', price: 85 },
+            { name: 'Matcha Zen', img: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=600&h=400&fit=crop', price: 78 },
         ];
 
         // ===== CART =====
@@ -1362,11 +2116,12 @@
         // ===== CHATBOT =====
         const chatResponses = {
             'hola': '¡Hola! Soy Lumi ✨ ¿En qué puedo ayudarte hoy?',
-            'precio': 'Nuestros precios van desde S/ 25.00 hasta S/ 80.00 dependiendo del tamaño y diseño. ¿Te gustaría ver nuestro catálogo?',
+            'precio': 'Nuestros precios van desde S/ 18.00 hasta S/ 100.00 dependiendo del tamaño y diseño. Tenemos 12 sabores disponibles. ¿Te gustaría ver nuestro catálogo?',
             'envio': '¡Hacemos envíos a domicilio en Lima! 🚚 El costo depende de la zona. ¿Dónde te encuentras?',
             'personalizado': '¡Claro que sí! Puedes ir a la sección "Personalizado" y contarnos tu idea. Lo convertiremos en una gelatina mágica 🎨',
-            'sabor': 'Tenemos sabores de fresa, mango, limón, piña, maracuyá y mix de frutas. También opciones sin azúcar 🌿',
+            'sabor': '¡Tenemos 12 sabores! Fresa, mango, limón, piña, maracuyá, uva, cereza, té matcha, café, coco, lúcuma y chirimoya. También opciones sin azúcar 🌿',
             'tiempo': 'El tiempo de elaboración es de 2 a 3 días. Te recomendamos hacer tu pedido con anticipación 💕',
+            'nuevo': '¡Tenemos muchas novedades! Nuevos sabores: maracuyá, té matcha, café, coco, lúcuma y chirimoya. También nuevos productos en Edición Especial ✨',
             'gracias': '¡De nada! Estoy aquí para lo que necesites 🌸',
             'adios': '¡Hasta luego! Que tengas un día dulce 🍬'
         };
@@ -1375,7 +2130,7 @@
             const chat = document.getElementById('chatWindow');
             chat.classList.toggle('open');
             if (chat.classList.contains('open') && document.getElementById('chatMessages').children.length === 0) {
-                addChatMsg('bot', '¡Hola! Soy Lumi ✨ ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre precios, envíos, sabores o pedidos personalizados.');
+                addChatMsg('bot', '¡Hola! Soy Lumi ✨ ¿En qué puedo ayudarte hoy? Puedes preguntarme sobre precios, envíos, nuestros 12 sabores o pedidos personalizados.');
             }
         }
 
@@ -1457,12 +2212,21 @@
             }
         }
 
+        // ===== FLAVOR SELECTOR =====
+        function selectFlavor(card) {
+            document.querySelectorAll('.flavor-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            const flavorName = card.querySelector('h4').textContent;
+            showToast(`✨ ${flavorName} seleccionado. Ve a Personalizado para pedirlo!`, 'success');
+        }
+
         // ===== CUSTOM FORM =====
         function submitCustom(e) {
             e.preventDefault();
             const name = document.getElementById('customName').value;
             const phone = document.getElementById('customPhone').value;
             const size = document.getElementById('customSize').value;
+            const flavor = document.getElementById('customFlavor').value;
             const desc = document.getElementById('customDesc').value;
             const date = document.getElementById('customDate').value;
 
@@ -1470,6 +2234,7 @@
                 `Nombre: ${name}%0A` +
                 `Teléfono: ${phone}%0A` +
                 `Tamaño: ${size}%0A` +
+                `Sabor: ${flavor}%0A` +
                 `Descripción: ${desc}%0A` +
                 `Fecha de entrega: ${date}%0A%0A` +
                 `¡Gracias! 💕`;
